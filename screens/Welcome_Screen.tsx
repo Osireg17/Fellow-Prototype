@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useContext} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,12 +7,17 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
-
+import { useAuthenticatedUser } from '../navigations/Navigator';
 import styles from '../styles/Welcome_Screen.style'
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const bgImage = require('../photos/LandingScreen.jpg');
 
+
 export default function Welcome_Screen({navigation}) {
+
+  
+  
   return (
       <ImageBackground source={bgImage} style={styles.imageBackground}>
         <View style={styles.welcomeContainer}>

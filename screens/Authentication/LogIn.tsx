@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { signInWithEmailAndPassword, OAuthProvider, signInWithCredential } from "firebase/auth";
+import { signInWithEmailAndPassword, OAuthProvider, signInWithCredential,  } from "firebase/auth";
 import { auth } from "../../config/firebase";
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { styles } from "../../styles/Authentication/LogIn.style";
