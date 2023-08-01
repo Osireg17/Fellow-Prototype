@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { auth } from '../../config/firebase';
 import { signOut } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Settings() {
   const navigation = useNavigation();
@@ -10,6 +11,8 @@ export default function Settings() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      // Clear the flag from AsyncStorage
+      await AsyncStorage.removeItem('isLoggedIn');
       navigation.reset({
         index: 0,
         routes: [{ name: 'Welcome' }],
@@ -18,6 +21,7 @@ export default function Settings() {
       console.error('Logout error:', error);
     }
   };
+  
 
   return (
     <View style={styles.container}>

@@ -24,6 +24,8 @@ import QuestionPost from '../components/QuestionPost'
 import QuestionCommentsPage from '../screens/Comment Pages/QuestionCommentsPage'
 import EditPostPage from '../components/EditPostPage'
 import RepostPage from '../components/RepostPage'
+import { database } from '../config/firebase'
+import { doc, getDoc, collection, getDocs, onSnapshot, query, updateDoc, arrayUnion, arrayRemove, where, orderBy } from "firebase/firestore";
 
 
 import { auth } from '../config/firebase'
@@ -175,9 +177,16 @@ const AuthenticatedUserProvider = ({children}) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setAuthenticatedUser(user);
+        
+        // Check if the user has created their profile
+        const userDoc = await getDoc(doc(database, "user", user.uid));
+        const profileCreated = userDoc.exists();
+        if (profileCreated) {
+          setIsProfileCreated(true);
+        }
       } else {
         setAuthenticatedUser(null);
       }
@@ -197,19 +206,19 @@ const AuthenticatedUserProvider = ({children}) => {
 export const useAuthenticatedUser = () => useContext(AuthenticatedUserContext);
 
 const MainStack = () => {
-  const { authenticatedUser, isProfileCreated, setIsProfileCreated } = useAuthenticatedUser();
+  const { authenticatedUser, isProfileCreated } = useAuthenticatedUser();
 
   return (
     <Stack.Navigator>
-      {!isProfileCreated && authenticatedUser ? (
-        <Stack.Screen
-          name="CreateProfile"
-          component={CreateProfile}
-          options={{headerShown: false}}
-        />
-      ) : null}
       {authenticatedUser ? (
         <>
+          {!isProfileCreated ? (
+            <Stack.Screen
+              name="CreateProfile"
+              component={CreateProfile}
+              options={{headerShown: false}}
+            />
+          ) : null}
           <Stack.Screen
             name="Feeds"
             component={ProfileDrawer}
@@ -273,6 +282,7 @@ const MainStack = () => {
     </Stack.Navigator>
   );
 };
+
 
 export default function App() {
   return (

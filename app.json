@@ -2,7 +2,7 @@
   "expo": {
     "name": "Fellow-v2",
     "slug": "Fellow-v2",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./photos/Main-Logo.png",
     "userInterfaceStyle": "light",
@@ -10,6 +10,9 @@
       "image": "./photos/Landing-Logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
       "**/*"
@@ -23,7 +26,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.osiobomighie.Fellowv2"
+      "package": "com.osiobomighie.Fellowv2",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
