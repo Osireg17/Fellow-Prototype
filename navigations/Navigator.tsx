@@ -180,7 +180,6 @@ const AuthenticatedUserProvider = ({children}) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setAuthenticatedUser(user);
-        
         // Check if the user has created their profile
         const userDoc = await getDoc(doc(database, "user", user.uid));
         const profileCreated = userDoc.exists();
