@@ -12,13 +12,6 @@ import {
 } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
-
-
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import {auth} from '../../config/firebase'
-import {database} from '../../config/firebase'
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
-
 import {styles} from '../../styles/Authentication/SignUp.style';
 
 export default function SignUp({navigation}) {
@@ -35,7 +28,7 @@ export default function SignUp({navigation}) {
     const [allFieldsEmpty, setAllFieldsEmpty] = useState(false);
     const [passwordComplexityError, setPasswordComplexityError] = useState(false);
 
-    const passwordComplexityCheck = (password) => {
+    const passwordComplexityCheck = (password: string) => {
       const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
       return regex.test(password);
     };
@@ -95,48 +88,15 @@ export default function SignUp({navigation}) {
       return isValid;
     };
 
-    const addUserToFirestore = async (uid) => {
-      try {
-        const data = {
-          uid: uid,
-          email: email,
-          name: name,
-          };
 
-          const userCollection = collection(database, "user");
-          const userDataDocument = doc(userCollection, uid);
-
-          await setDoc(userDataDocument, data);
-      } catch (e) {
-        console.error("Error adding user to Firestore: ", e);
-      }
-    };
-    
-    // const onHandleSignUp = () => {
-    //   if (email !== "" && password !== "" && confirmPassword !== "") {
-    //     if (password === confirmPassword) {
-    //       createUserWithEmailAndPassword(auth, email, password)
-    //         .then((userCredential) => {
-    //           console.log("SignUp Success");
-    //           addUserToFirestore(userCredential.user.uid);
-    //           navigation.navigate("CreateProfile");
-    //         })
-    //         .catch((err) => Alert.alert("SignUp error", err.message));
-    //     } else {
-    //       Alert.alert("Error", "Passwords do not match");
-    //     }
-    //   }
-    // };
 
     const onHandleSignUp = () => {
       if (validateFields()) {
-        createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            addUserToFirestore(userCredential.user.uid);
-            console.log("SignUp Success");
-            navigation.navigate("CreateProfile");
-          })
-          .catch((err) => Alert.alert("SignUp error", err.message));
+        navigation.navigate("CreateProfile", {
+          name,
+          email,
+          password,
+        });
       }
     };
     

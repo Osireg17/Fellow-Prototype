@@ -173,22 +173,11 @@ function Feeds() {
 
 const AuthenticatedUserProvider = ({children}) => {
   const [authenticatedUser, setAuthenticatedUser] = useState(null);
-  const [isProfileCreated, setIsProfileCreated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setAuthenticatedUser(user);
-        // Check if the user has created their profile
-        const userDoc = await getDoc(doc(database, "user", user.uid));
-        const profileCreated = userDoc.exists();
-        if (profileCreated) {
-          setIsProfileCreated(true);
-        }
-      } else {
-        setAuthenticatedUser(null);
-      }
+      setAuthenticatedUser(user);
       setLoading(false);
     });
 
@@ -196,7 +185,7 @@ const AuthenticatedUserProvider = ({children}) => {
   }, []);
 
   return (
-    <AuthenticatedUserContext.Provider value={{authenticatedUser, setAuthenticatedUser, isProfileCreated, setIsProfileCreated}}>
+    <AuthenticatedUserContext.Provider value={{authenticatedUser, setAuthenticatedUser}}>
       {loading ? <View><ActivityIndicator/></View> : children}
     </AuthenticatedUserContext.Provider>
   );
@@ -205,19 +194,12 @@ const AuthenticatedUserProvider = ({children}) => {
 export const useAuthenticatedUser = () => useContext(AuthenticatedUserContext);
 
 const MainStack = () => {
-  const { authenticatedUser, isProfileCreated } = useAuthenticatedUser();
+  const { authenticatedUser } = useAuthenticatedUser();
 
   return (
     <Stack.Navigator>
       {authenticatedUser ? (
         <>
-          {!isProfileCreated ? (
-            <Stack.Screen
-              name="CreateProfile"
-              component={CreateProfile}
-              options={{headerShown: false}}
-            />
-          ) : null}
           <Stack.Screen
             name="Feeds"
             component={ProfileDrawer}
@@ -274,6 +256,11 @@ const MainStack = () => {
           <Stack.Screen
             name="ForgotPassword"
             component={ForgotPassword}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="CreateProfile"
+            component={CreateProfile}
             options={{headerShown: false}}
           />
         </>
