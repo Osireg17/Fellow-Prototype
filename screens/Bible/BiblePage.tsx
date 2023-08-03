@@ -340,6 +340,7 @@ export default function BiblePage() {
         selectedColor={selectedColor}
         setSelectedColor={setSelectedColor}
         selectedVerses={selectedVerses}
+        onVersePress={onVersePress}
       />
     </SafeAreaProvider>
   );

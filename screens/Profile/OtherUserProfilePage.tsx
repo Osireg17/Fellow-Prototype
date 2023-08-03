@@ -1,5 +1,5 @@
-import {Text, View, TouchableOpacity, FlatList, Dimensions, Image } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import { Text, View, TouchableOpacity, FlatList, Dimensions, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { doc, onSnapshot, updateDoc, arrayUnion, arrayRemove, collection, query, where, getDocs } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { Avatar } from 'react-native-elements';
@@ -8,10 +8,10 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import styles from '../../styles/Profile/OtherUserProfilePage.style'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import {AntDesign, FontAwesome5 } from '@expo/vector-icons';
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
 
-function OtherUserProfile({navigation, route}) {
+function OtherUserProfile({ navigation, route }) {
   const { uid } = route.params;
   const [username, setUsername] = useState('');
   const [followers, setFollowers] = useState([]);
@@ -25,14 +25,14 @@ function OtherUserProfile({navigation, route}) {
   const handleConnect = async () => {
     const auth = getAuth();
     const currentUserUid = auth.currentUser.uid;
-    
+
     const userDocRef = doc(database, 'user', uid);
     const currentUserDocRef = doc(database, 'user', currentUserUid);
-    
+
     console.log(`Connect state before operation: ${isFollowing}`);
     console.log(`Current user ID: ${currentUserUid}`);
     console.log(`Other user ID: ${uid}`);
-    
+
     if (isFollowing) {
       console.log('Attempting to disconnect...');
       await updateDoc(userDocRef, {
@@ -52,14 +52,14 @@ function OtherUserProfile({navigation, route}) {
       });
       setIsFollowing(true);
     }
-  
+
     console.log(`Connect state after operation: ${isFollowing}`);
-};
-  
+  };
+
 
   useEffect(() => {
     const userDocRef = doc(database, 'user', uid);
-  
+
     const unsubscribe = onSnapshot(userDocRef, (userDocSnap) => {
       if (userDocSnap.exists()) {
         setUsername(userDocSnap.data().username);
@@ -69,7 +69,7 @@ function OtherUserProfile({navigation, route}) {
         setFavoriteVerse(userDocSnap.data().favouriteVerse);
         setChurch(userDocSnap.data().church);
         setProfilePic(userDocSnap.data().profilePicture);
-  
+
         // Check if the current user is already connected to the viewed user
         const auth = getAuth();
         const currentUserUid = auth.currentUser.uid;
@@ -82,13 +82,13 @@ function OtherUserProfile({navigation, route}) {
     }, (error) => {
       console.log("Error fetching user's profile picture:", error);
     });
-  
+
     // Clean up the listener when the component is unmounted
     return () => {
       unsubscribe();
     };
-  }, [isFollowing]  );
-  
+  }, [isFollowing]);
+
 
   return (
     <SafeAreaProvider style={styles.container}>
@@ -112,7 +112,9 @@ function OtherUserProfile({navigation, route}) {
             </View>
             <View style={styles.stat}>
               <Text style={styles.statLabel}>Praises</Text>
-              <Text style={styles.statValue}>{praises}</Text>
+              <Text style={styles.statValue}>{praises ??
+                0
+              }</Text>
             </View>
           </View>
         </View>
@@ -139,7 +141,7 @@ function OtherUserProfile({navigation, route}) {
   );
 }
 
-const PublicPostsRoute = ({navigation, uid}) => {
+const PublicPostsRoute = ({ navigation, uid }) => {
   const [publicPosts, setPublicPosts] = useState([]);
   const otherUserUid = uid;
 
@@ -171,12 +173,18 @@ const PublicPostsRoute = ({navigation, uid}) => {
             <View style={styles.postHeader}>
               <Text style={styles.postTitle}>{item.Title}</Text>
               <View style={styles.postUser}>
-                <TouchableOpacity onPress={() => {if (item.uid === otherUserUid) {navigation.navigate('Profile');} else {
-                  navigation.navigate('OtherUserProfilePage', {uid: item.uid });}}}>
+                <TouchableOpacity onPress={() => {
+                  if (item.uid === otherUserUid) { navigation.navigate('Profile'); } else {
+                    navigation.navigate('OtherUserProfilePage', { uid: item.uid });
+                  }
+                }}>
                   <Text style={styles.postUsername}>{item.username}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => {if (item.uid === otherUserUid) {navigation.navigate('Profile');} else {
-                  navigation.navigate('OtherUserProfilePage', {uid: item.uid });}}}>
+                <TouchableOpacity onPress={() => {
+                  if (item.uid === otherUserUid) { navigation.navigate('Profile'); } else {
+                    navigation.navigate('OtherUserProfilePage', { uid: item.uid });
+                  }
+                }}>
                   <Image
                     source={{ uri: item.userProfilePicture || 'https://via.placeholder.com/40' }}
                     style={styles.postUserImage}
@@ -216,7 +224,7 @@ const PublicPostsRoute = ({navigation, uid}) => {
 
 }
 
-const PrivatePostsRoute = ({navigation, uid}) => {
+const PrivatePostsRoute = ({ navigation, uid }) => {
   const [privatePosts, setPrivatePosts] = useState([]);
   const otherUserUid = uid;
 
@@ -248,12 +256,18 @@ const PrivatePostsRoute = ({navigation, uid}) => {
             <View style={styles.postHeader}>
               <Text style={styles.postTitle}>{item.Title}</Text>
               <View style={styles.postUser}>
-                <TouchableOpacity onPress={() => {if (item.uid === otherUserUid) {navigation.navigate('Profile');} else {
-                  navigation.navigate('OtherUserProfilePage', {uid: item.uid });}}}>
+                <TouchableOpacity onPress={() => {
+                  if (item.uid === otherUserUid) { navigation.navigate('Profile'); } else {
+                    navigation.navigate('OtherUserProfilePage', { uid: item.uid });
+                  }
+                }}>
                   <Text style={styles.postUsername}>{item.username}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => {if (item.uid === otherUserUid) {navigation.navigate('Profile');} else {
-                  navigation.navigate('OtherUserProfilePage', {uid: item.uid });}}}>
+                <TouchableOpacity onPress={() => {
+                  if (item.uid === otherUserUid) { navigation.navigate('Profile'); } else {
+                    navigation.navigate('OtherUserProfilePage', { uid: item.uid });
+                  }
+                }}>
                   <Image
                     source={{ uri: item.userProfilePicture || 'https://via.placeholder.com/40' }}
                     style={styles.postUserImage}
@@ -292,7 +306,7 @@ const PrivatePostsRoute = ({navigation, uid}) => {
   );
 }
 
-const QuestionPostsRoute = ({navigation, uid}) => {
+const QuestionPostsRoute = ({ navigation, uid }) => {
   const [questionPosts, setQuestionPosts] = useState([]);
   const otherUserUid = uid;
 
@@ -301,7 +315,7 @@ const QuestionPostsRoute = ({navigation, uid}) => {
       const questionCollection = collection(database, 'questions');
       const questionQuery = query(questionCollection, where('uid', '==', otherUserUid));
       const questionDocs = await getDocs(questionQuery);
-  
+
       let allQuestionPosts = [];
       questionDocs.forEach(doc => {
         const postData = doc.data();
@@ -310,13 +324,13 @@ const QuestionPostsRoute = ({navigation, uid}) => {
           allQuestionPosts.push({ ...postData, id: doc.id });
         }
       });
-  
+
       setQuestionPosts(allQuestionPosts);
     };
-  
+
     fetchPosts();
   }, []);
-  
+
 
   return (
     <FlatList
@@ -329,12 +343,18 @@ const QuestionPostsRoute = ({navigation, uid}) => {
             <View style={styles.postHeader}>
               <Text style={styles.postTitle}>{item.Title}</Text>
               <View style={styles.postUser}>
-                <TouchableOpacity onPress={() => {if (item.uid === otherUserUid) {navigation.navigate('Profile');} else {
-                  navigation.navigate('OtherUserProfilePage', {uid: item.uid });}}}>
+                <TouchableOpacity onPress={() => {
+                  if (item.uid === otherUserUid) { navigation.navigate('Profile'); } else {
+                    navigation.navigate('OtherUserProfilePage', { uid: item.uid });
+                  }
+                }}>
                   <Text style={styles.postUsername}>{item.username}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => {if (item.uid === otherUserUid) {navigation.navigate('Profile');} else {
-                  navigation.navigate('OtherUserProfilePage', {uid: item.uid });}}}>
+                <TouchableOpacity onPress={() => {
+                  if (item.uid === otherUserUid) { navigation.navigate('Profile'); } else {
+                    navigation.navigate('OtherUserProfilePage', { uid: item.uid });
+                  }
+                }}>
                   <Image
                     source={{ uri: item.userProfilePicture || 'https://via.placeholder.com/40' }}
                     style={styles.postUserImage}
@@ -362,7 +382,7 @@ const QuestionPostsRoute = ({navigation, uid}) => {
   );
 }
 
-const OtherUserProfilePage = ({navigation, route}) => {
+const OtherUserProfilePage = ({ navigation, route }) => {
   const { uid } = route.params;
   console.log(uid);
   const [index, setIndex] = useState(0);
@@ -376,15 +396,15 @@ const OtherUserProfilePage = ({navigation, route}) => {
     switch (route.key) {
       case 'public':
         return <PublicPostsRoute navigation={navigation}
-        uid={uid}
+          uid={uid}
         />;
       case 'private':
-        return <PrivatePostsRoute navigation={navigation} 
-        uid={uid}
+        return <PrivatePostsRoute navigation={navigation}
+          uid={uid}
         />;
       case 'question':
-        return <QuestionPostsRoute navigation={navigation} 
-        uid={uid}
+        return <QuestionPostsRoute navigation={navigation}
+          uid={uid}
         />;
       default:
         return null;
@@ -394,22 +414,22 @@ const OtherUserProfilePage = ({navigation, route}) => {
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
-        <OtherUserProfile navigation={navigation} route={route}/>
-          <TabView
-            navigationState={{ index, routes }}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
-            initialLayout={{ width: Dimensions.get('window').width }}
-            renderTabBar={props => (
-              <TabBar
+        <OtherUserProfile navigation={navigation} route={route} />
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{ width: Dimensions.get('window').width }}
+          renderTabBar={props => (
+            <TabBar
               {...props}
               indicatorStyle={{ backgroundColor: 'black' }}
-              style={{ backgroundColor: 'white', marginTop: 30}}
+              style={{ backgroundColor: 'white', marginTop: 30 }}
               labelStyle={{ color: 'black' }}  // set color for labels
               activeColor="black"  // set active color for labels
             />
-            )}
-          />
+          )}
+        />
       </View>
     </SafeAreaProvider>
   );
