@@ -4,59 +4,69 @@ import { StyleSheet, Dimensions } from 'react-native';
 const styles = StyleSheet.create({
   profileContainer: {
     flex: 1,
-    alignItems: 'flex-start',
-    padding: 10,
-    backgroundColor: '#ffffff',
-    marginTop: -60, // Removed the negative margin
-  },
-  username: {
-    fontSize: 36,
+    backgroundColor: '#FFFFFF',
+    padding: 20,
+    marginTop: -60,
+},
+username: {
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  headerContainer: {
+    color: '#2C3E50',
+    textAlign: 'center',
+    marginBottom: 20,
+},
+headerContainer: {
     flexDirection: 'row',
-    marginBottom: 5,
-  },
-  avatar: {
-    marginRight: 15,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  stat: {
+    alignItems: 'center',
+    marginBottom: 20,
+},
+avatar: {
     marginRight: 20,
-  },
-  statValue: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  statLabel: {
-    fontSize: 16,
-  },
-  detailsContainer: {
-    marginTop: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+},
+statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 0, // Minimize empty space after container
-  },
-    detail: {
-      flex: 1,
-      padding: 10,
-    },
-    label: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      marginBottom: 5,
-    },
-    value: {
-      fontSize: 18,
-      backgroundColor: '#f9f9f9',
-      padding: 5,
-      borderRadius: 10,
-    },  
+    width: '60%',
+},
+stat: {
+    alignItems: 'center',
+},
+statLabel: {
+    fontSize: 14,
+    color: '#7D7D7D',
+},
+statValue: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#2C3E50',
+},
+detailsContainer: {
+    backgroundColor: '#FFF',
+    padding: 15,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+},
+detail: {
+    marginBottom: 10,
+},
+label: {
+    fontSize: 16,
+    color: '#7D7D7D',
+    marginBottom: 5,
+},
+value: {
+    fontSize: 18,
+    color: '#2C3E50',
+}, 
   postContainer: {
     width: '100%',
     backgroundColor: '#ffffff',

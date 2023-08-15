@@ -8,8 +8,15 @@ import AccordionItem from '../../components/AccordionItem';
 import RenderHtml from 'react-native-render-html';
 import BiblePageBottomSheet from '../../components/BiblePageBottomSheet';
 
+interface HeaderProps {
+  selectedVersion: string;
+  selectedBook: string;
+  selectedChapter: string;
+  onPressVersion: () => void;
+  onPressBook: () => void;
+}
 
-function Header({ selectedVersion, selectedBook, selectedChapter, onPressVersion, onPressBook }: { selectedVersion: any, selectedBook: any, selectedChapter: any, onPressVersion: any, onPressBook: any }) {
+function Header({ selectedVersion, selectedBook, selectedChapter, onPressVersion, onPressBook }: HeaderProps) {
   const navigation = useNavigation();
 
   return (
@@ -53,6 +60,10 @@ export default function BiblePage() {
   const [selectedVerses, setSelectedVerses] = useState([]);
   const [selectedColor, setSelectedColor] = useState('red');
   const [Loading, setLoading] = useState(false);
+
+  function stripHtml(html) {
+    return html.replace(/<\/?[^>]+(>|$)/g, "");
+  }
 
 
   useEffect(() => {
@@ -101,7 +112,7 @@ export default function BiblePage() {
     getInitialBooks();  // fetch the initial set of books for NIV version
   }, []);
 
-  const handleVersionPress = async (version: any) => {
+  const handleVersionPress = async (version: string) => {
     setLoading(true);
     try {
       const response = await fetch(`https://bolls.life/get-books/${version}/`);
@@ -119,7 +130,7 @@ export default function BiblePage() {
     }
   };
 
-  const handleChapterPress = async (bookId: any, chapter: any) => {
+  const handleChapterPress = async (bookId: string, chapter: string) => {
     setLoading(true);
     try {
       const response = await fetch(`https://bolls.life/get-text/${selectedVersion}/${bookId}/${chapter}/`);
@@ -151,7 +162,7 @@ export default function BiblePage() {
     }
   };
 
-  const handleBookPress = (book: any, chapter: any = '1') => {
+  const handleBookPress = (book: any, chapter: string = '1') => {
     setSelectedBook(book.name);
     setSelectedChapter(chapter);
 
@@ -165,23 +176,23 @@ export default function BiblePage() {
   };
 
 
-  const ChapterGrid = ({ chapters, bookId }) => {
+  const ChapterGrid = ({ chapters, bookId }: { chapters: number, bookId: string }) => {
     const grid = [];
     for (let i = 1; i <= chapters; i++) {
       grid.push(
-        <TouchableOpacity key={i} onPress={() => {
-          handleChapterPress(bookId, i);
-        }}>
-          <View style={styles.chapterButton}>
-            <Text style={styles.chapterText}>{i}</Text>
-          </View>
+        <TouchableOpacity
+          key={i}
+          style={styles.chapterButton}
+          onPress={() => handleChapterPress(bookId, i)}
+        >
+          <Text style={styles.chapterText}>{i}</Text>
         </TouchableOpacity>
       );
     }
     return <View style={styles.chapterGrid}>{grid}</View>;
   };
 
-  const handleSelectVersion = (version: any) => {
+  const handleSelectVersion = (version: string) => {
     handleVersionPress(version);
     setModalVisible(false);
   };
@@ -284,20 +295,25 @@ export default function BiblePage() {
         visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
-        }}>
+        }}
+      >
         <SafeAreaView style={styles.modalView}>
           <ScrollView contentContainerStyle={styles.modalContent}>
             <Text style={styles.modalTitle}>Pick a version</Text>
             {versionsData.map((version) => (
-              <TouchableOpacity key={version.version} onPress={() => handleSelectVersion(version.version)}>
-                <Text style={styles.modalText}>{version.version}</Text>
+              <TouchableOpacity
+                key={version.version}
+                style={styles.versionItem}
+                onPress={() => handleSelectVersion(version.version)}
+              >
+                <Text style={styles.versionText}>{version.version}</Text>
               </TouchableOpacity>
             ))}
-            <View style={{ height: 50 }} />
           </ScrollView>
           <Pressable
             style={[styles.button, styles.buttonClose]}
-            onPress={() => setModalVisible(false)}>
+            onPress={() => setModalVisible(false)}
+          >
             <Text style={styles.textStyle}>Close</Text>
           </Pressable>
         </SafeAreaView>

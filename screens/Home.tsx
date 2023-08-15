@@ -67,8 +67,6 @@ function getAllPrivatePosts(setPrivatePosts, value) {
     const data = currentUserDocSnap.data();
     console.log("Current user data:", data);
 
-    // Check if the current user is following anyone
-    // Also include the current user's own posts
     let uids = [];
     if (Array.isArray(data.following)) {
       uids = [...data.following, currentUserUid];
@@ -76,8 +74,7 @@ function getAllPrivatePosts(setPrivatePosts, value) {
       uids = [currentUserUid];
     }
 
-    // Create a query to get all private posts from the users that the current user is following
-    // Also include the current user's own posts
+
     const q = query(
       collection(database, "private"),
       where("uid", "in", uids),

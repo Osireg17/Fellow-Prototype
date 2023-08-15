@@ -6,76 +6,92 @@ const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
-    padding: 20,
-    paddingTop: 30,
+    backgroundColor: '#FFFFFF',
   },
   profileContainer: {
-    flex: 1,
-    marginTop: 5,
+    alignItems: 'center',
+    padding: 20,
   },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginTop: 20,
+    marginBottom: 30,
   },
-  avatarWrapper: {
-    alignItems: 'flex-start',
-    marginRight: 20,
-  },
-  avatar: {},
-  username: {
-    fontSize: 24,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: 20,
+  avatar: {
+    marginRight: 25,
+    borderColor: '#E0E0E0',
+    borderWidth: 2,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
   },
   statsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    flex: 1,
+    justifyContent: 'space-between',
+    width: '60%',
   },
-  stat: {},
-  statValue: {
-    fontSize: 20,
-    fontWeight: '600',
-    textAlign: 'center',
+  stat: {
+    alignItems: 'center',
   },
   statLabel: {
-    fontSize: 16,
-    color: '#888',
-    textAlign: 'center',
+    fontSize: 14,
+    color: '#7D7D7D',
+    marginTop: 5,
+  },
+  statValue: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#2C3E50',
   },
   detailsContainer: {
-    marginBottom: 20,
+    backgroundColor: '#FFFFFF',
+    width: '100%',
+    padding: 15,
+    borderRadius: 15,
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
-  detail: {},
+  detail: {
+    marginBottom: 15,
+  },
   label: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
+    color: '#7D7D7D',
   },
   value: {
-    fontSize: 16,
-      backgroundColor: '#f9f9f9',
-      padding: 5,
-      borderRadius: 10,
+    fontSize: 18,
+    color: '#2C3E50',
   },
   buttonWrapper: {
+    marginTop: 20,
+    width: '90%',   // Adjusting this to a higher percentage will make it wider
     alignItems: 'center',
   },
-  button: {
-    width: '80%',
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#282C35',
+  followButton: {
+    backgroundColor: '#3498DB',
+    padding: 15,
+    borderRadius: 30,
+    width: '100%',   // Set to full width of its container (buttonWrapper)
     alignItems: 'center',
-    justifyContent: 'center',
+  },
+  unfollowButton: {
+    backgroundColor: '#E74C3C',
+    padding: 15,
+    borderRadius: 30,
+    width: '100%',   // Set to full width of its container (buttonWrapper)
+    alignItems: 'center',
   },
   buttonText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#ffffff',
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
   postContainer: {
     backgroundColor: '#ffffff',
@@ -160,6 +176,21 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontWeight: '500',
   },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+},
+spacer: {
+    width: 24, // same as the arrow icon size
+    height: 24,
+    // You can set a backgroundColor for debugging purposes, but it should be transparent in the final design
+    // backgroundColor: 'red',
+},
   
 });
 
