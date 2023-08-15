@@ -15,7 +15,7 @@
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-firebase/app": "^18.1.0",
     "@react-native-firebase/storage": "^18.1.0",
-    "@react-native-picker/picker": "2.4.8",
+    "@react-native-picker/picker": "^2.4.8",
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/drawer": "^6.6.3",
     "@react-navigation/native": "^6.1.7",
@@ -67,6 +67,11 @@
     "@types/bad-words": "^3.0.1",
     "@types/react": "~18.0.14",
     "typescript": "^4.9.4"
+  },
+  "overrides": {
+    "react-native-picker-select": {
+      "@react-native-picker/picker": "$@react-native-picker/picker"
+    }
   },
   "private": true
 }

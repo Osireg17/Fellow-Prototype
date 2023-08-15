@@ -7,7 +7,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Button,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -35,49 +34,47 @@ function AccordionItem({ children, title, id, expandedAccordion, setExpandedAcco
     setExpanded(id === expandedAccordion);
   }, [expandedAccordion]);
 
-  const body = <View style={styles.accordBody}>{ children }</View>;
-
   return (
-    <TouchableOpacity onPress={handlePress}>
-      <View style={styles.accordContainer}>
-        <View style={styles.accordHeader}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={[styles.accordTitle, {flex: 1, marginRight: 10}]}>{ title }</Text>
-            <Icon name={ expanded ? 'chevron-up' : 'chevron-down' } size={20} color="#bbb" style={{textAlign: 'right'}}/>
-          </View>
-        </View>
-        { expanded && body }
+    <TouchableOpacity onPress={handlePress} style={styles.accordContainer}>
+      <View style={styles.accordHeader}>
+        <Text style={styles.accordTitle}>{ title }</Text>
+        <Icon name={ expanded ? 'chevron-up' : 'chevron-down' } size={20} color="#777"/>
       </View>
+      { expanded && <View style={styles.accordBody}>{ children }</View> }
     </TouchableOpacity>
   );
 }
 
-
-
-
-
-
 const styles = StyleSheet.create({
     accordContainer: {
         width: '100%',
-        marginVertical: 5,
-        paddingHorizontal: 0,
+        marginVertical: 10,
+        borderRadius: 12,
         overflow: 'hidden',
-        marginLeft: 10,
-        paddingRight: 10,
+        backgroundColor: '#F6F6F6',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 2,
     },
     accordHeader: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: 6,
+        padding: 15,
+        borderBottomWidth: 0.5,
+        borderColor: '#D1D1D1',
     },
     accordTitle: {
-        fontSize: 12,
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#333',
     },
     accordBody: {
-        padding: 10,
+        padding: 15,
     },
 });
 
 export default AccordionItem;
+

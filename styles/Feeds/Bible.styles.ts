@@ -35,64 +35,83 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   modalView: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    paddingHorizontal: 0,
-    paddingTop: 35,
-    paddingBottom: 15,
+    backgroundColor: '#F6F6F6',
+    borderRadius: 25,
+    paddingHorizontal: 20,
+    paddingTop: 40,
+    paddingBottom: 25,
     shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 5,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 0,
-    height: '100%',
-    justifyContent: 'space-between',
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 5,
+    height: '90%',
+    marginHorizontal: 10,
+    marginTop: windowHeight * 0.05,
   },
   modalContent: {
     flexGrow: 1,
     justifyContent: 'space-between',
   },
   button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
+    borderRadius: 25,
+    padding: 12,
+    elevation: 3,
     alignSelf: 'center',
   },
   buttonClose: {
-    backgroundColor: '#000000',
-    marginBottom: 15,
-    width: 120,
+    backgroundColor: '#E76F51',
+    marginBottom: 20,
+    width: 140,
   },
   textStyle: {
     color: '#FFFFFF',
-    fontWeight: 'bold',
+    fontWeight: '600',
+    fontSize: 16,
     textAlign: 'center',
   },
   modalTitle: {
-    fontSize: 25,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: '600',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 20,
+    color: '#2C3E50',
   },
   chapterGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between', // to distribute items evenly
-    padding: 10, // to give some space on the sides
+    justifyContent: 'space-between',
+    padding: 10,
   },
   chapterButton: {
-    width: '22%', // adjusted to accommodate for padding and margin, for 4 items per row
-    aspectRatio: 1, // to keep width and height the same, creating a square
+    width: '23%',  // slightly reduced for better spacing
+    aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 6,
+    margin: 8,  // increased margin for better spacing
+    backgroundColor: '#F8E9D9',
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
   },
-  chapterText: { // new style for the text inside the chapter buttons
-    fontSize: 18, // increase this as needed
+  chapterText: {
+    fontSize: 20,  // increased font size
+    fontWeight: '600',
+    color: '#5D5D5D',
   },
+  versionItem: {
+    padding: 15,
+    backgroundColor: '#E5E5E5',
+    borderRadius: 25,
+    marginBottom: 10,
+    alignItems: 'center',
+},
   verseText: {
     fontSize: 18,
     color: 'black',
@@ -102,7 +121,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
     textAlign: 'justify',
   },
-  
   centerBold: {
     fontWeight: 'bold',
     textAlign: 'center',

@@ -5,11 +5,18 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Header as HeaderRNE } from 'react-native-elements';
 import { Feather, Ionicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 import { database } from '../../config/firebase';
-import { arrayUnion, arrayRemove, updateDoc, collection, onSnapshot, doc, getDoc } from "firebase/firestore";
+import { arrayUnion, arrayRemove, updateDoc, collection, onSnapshot, doc, getDoc, getDocs } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { FontAwesome5 } from '@expo/vector-icons';
 
-async function fetchProfilePicture(uid) {
+
+type UID = string;
+type PictureURL = string;
+type Question = any; // replace any with the type definition for a Question
+type Navigation = any; // replace any with the type definition for Navigation
+type Post = any; 
+
+async function fetchProfilePicture(uid: UID): Promise<PictureURL> {
   try {
     const userDocRef = doc(database, "user", uid);
     const userDocSnap = await getDoc(userDocRef);
@@ -26,11 +33,11 @@ async function fetchProfilePicture(uid) {
   }
 }
 
-function QuestionHeader({ navigation }) {
+function QuestionHeader({ navigation: Navigation }: { navigation: Navigation}) {
   const [profilePicture, setProfilePicture] = useState('');
 
   const auth = getAuth();
-  const uid = auth.currentUser.uid;
+  const uid = auth.currentUser?.uid;
 
   useEffect(() => {
     fetchProfilePicture(uid).then((pictureUrl) => {
@@ -42,7 +49,7 @@ function QuestionHeader({ navigation }) {
 
   const NavigateToProfile = () => {
     //complete the function to navigate to the profile page
-    navigation.navigate('Profile');
+    Navigation.navigate('Profile');
   }
   return (
     <>
@@ -67,7 +74,7 @@ function QuestionHeader({ navigation }) {
   );
 }
 
-export default function Questions({ navigation }) {
+export default function Questions({ navigation: Navigation }: { navigation: Navigation }) {
   const [questions, setQuestions] = useState([]);
 
   const auth = getAuth();
@@ -90,10 +97,10 @@ export default function Questions({ navigation }) {
   }, []);
 
   const NavigateToPostQuestion = () => {
-    navigation.navigate('QuestionPost');
+    Navigation.navigate('QuestionPost');
   }
 
-  const PostStats = ({ post, uid }) => {
+  const PostStats = ({ post, uid }: { post: Post, uid: UID }) => {
     const [praises, setPraises] = useState(post.praises || []);
     const [liked, setLiked] = useState(false);
     const [comments, setComments] = useState(post.comments || []);
@@ -137,7 +144,7 @@ export default function Questions({ navigation }) {
     
 
     const onCommentClick = () => {
-      navigation.navigate('QuestionCommentsPage', { post: post, uid: uid, postId: post.id });
+      Navigation.navigate('QuestionCommentsPage', { post: post, uid: uid, postId: post.id });
     }
 
     return (
@@ -167,12 +174,12 @@ export default function Questions({ navigation }) {
 
   };
 
-  const navigateToOtherProfile = (post, uid) => {
+  const navigateToOtherProfile = (post: Post, uid: UID) => {
     if (post.type === "public") {
       if (post.uid === uid) {
-        navigation.navigate('Profile');
+        Navigation.navigate('Profile');
       } else {
-        navigation.navigate('OtherUserProfilePage', { uid: post.uid });
+        Navigation.navigate('OtherUserProfilePage', { uid: post.uid });
       }
     }
   }
@@ -186,7 +193,7 @@ export default function Questions({ navigation }) {
       }}
 
     >
-      <QuestionHeader navigation={navigation} />
+      <QuestionHeader navigation={Navigation} />
       <View style={[styles.scene, { backgroundColor: '#FBF8F8' }]}>
         <FlatList
           data={questions}

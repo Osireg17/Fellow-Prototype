@@ -6,10 +6,32 @@ import { Avatar } from 'react-native-elements';
 import { database } from '../../config/firebase';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import styles from '../../styles/Profile/OtherUserProfilePage.style'
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
+import { TabView, TabBar } from 'react-native-tab-view';
+import { AntDesign, } from '@expo/vector-icons';
+import { Header as HeaderRNE } from 'react-native-elements';
 
+
+function Header ({ navigation, username }) {
+  return (
+    <HeaderRNE 
+      leftComponent={
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <AntDesign name="arrowleft" size={24} color="black" />
+        </TouchableOpacity>
+      }
+      centerComponent={{ text: `${username}`, style: { color: 'black', fontSize: 24 } }}
+      containerStyle={{
+        backgroundColor: 'white',
+        justifyContent: 'space-around',
+        height: 120,
+        paddingTop: 0,
+        borderBottomWidth: 0,
+        borderBottomColor: 'lightgrey',
+        marginTop: -30,
+      }}
+    />
+  )
+}
 
 function OtherUserProfile({ navigation, route }) {
   const { uid } = route.params;
@@ -93,7 +115,7 @@ function OtherUserProfile({ navigation, route }) {
   return (
     <SafeAreaProvider style={styles.container}>
       <View style={styles.profileContainer}>
-        <Text style={styles.username}>{username}</Text>
+        <Header navigation={navigation} username={username} />
         <View style={styles.headerContainer}>
           <Avatar
             rounded
@@ -129,8 +151,8 @@ function OtherUserProfile({ navigation, route }) {
           </View>
         </View>
         <View style={styles.buttonWrapper}>
-          <TouchableOpacity
-            style={styles.button}
+        <TouchableOpacity
+            style={isFollowing ? styles.unfollowButton : styles.followButton}
             onPress={handleConnect}
           >
             <Text style={styles.buttonText}>{isFollowing ? 'Unfollow' : 'Follow'}</Text>
@@ -424,7 +446,7 @@ const OtherUserProfilePage = ({ navigation, route }) => {
             <TabBar
               {...props}
               indicatorStyle={{ backgroundColor: 'black' }}
-              style={{ backgroundColor: 'white', marginTop: 30 }}
+              style={{ backgroundColor: 'white', marginTop: 70 }}
               labelStyle={{ color: 'black' }}  // set color for labels
               activeColor="black"  // set active color for labels
             />
