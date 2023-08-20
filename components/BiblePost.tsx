@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, Keyboard, useWindowDimensions, Alert } from 'react-native';
+import { View, Text, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity, Keyboard, useWindowDimensions, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { database } from '../config/firebase';
@@ -7,10 +7,11 @@ import { collection, doc, setDoc, getDoc, serverTimestamp } from "firebase/fires
 import { getAuth } from "firebase/auth";
 import RNPickerSelect from "react-native-picker-select";
 import { Header as HeaderRNE } from 'react-native-elements';
-import Filter from 'bad-words'
+import Filter from 'bad-words';
 import { styles, pickerSelectStyles } from '../styles/Components/BiblePost.style';
 import { unGodlyWords } from '../config/unGodlyWords';
 import RenderHTML from 'react-native-render-html';
+import { postOpinion } from './utils/BiblePost';
 
 
 import uuid from 'react-native-uuid';
@@ -46,111 +47,6 @@ function BiblePost({ route, navigation }) {
     const [postType, setPostType] = useState("");
 
 
-
-    const filter = new Filter({ list: unGodlyWords });
-
-    const goodWords = ['God']
-    filter.removeWords(...goodWords)
-
-
-
-    // write a function that ensure the user content does not go over 400 characters
-
-
-
-    const postOpinion = async () => {
-        if (Content === "" || postType === "") {
-            Alert.alert(
-                "Missing information",
-                "Please fill out all fields.",
-                [
-                    { text: "OK" }
-                ],
-                { cancelable: false }
-            );
-            return;
-        }
-
-        if (filter.isProfane(Content) || filter.isProfane(Title)) {
-            Alert.alert(
-                "Profanity detected",
-                "Please remove any profanity from your opinion.",
-                [
-                    { text: "OK" }
-                ],
-                { cancelable: false }
-            );
-            // console.log the bad words
-            console.log(filter.clean(Content));
-            return;
-        }
-
-        if (Title.length > 30) {
-            Alert.alert(
-                "Title is too long",
-                "Please shorten the title to 30 characters or less.",
-                [
-                    { text: "OK" }
-                ],
-                { cancelable: false }
-            );
-            return;
-        }
-
-
-        try {
-            const auth = getAuth();
-            const uid = auth.currentUser.uid;
-
-            // Get the user's profile from Firestore
-            const userDoc = await getDoc(doc(database, 'user', uid));
-            if (!userDoc.exists()) {
-                console.error('User not found in database');
-                return;
-            }
-
-            const username = userDoc.data().username;
-            const userProfilePicture = userDoc.data().profilePicture;
-
-            const postData = {
-                Title,
-                Content,
-                postType,
-                BibleInformation: selectedVerses.map(verse => ({
-                    BibleBook: verse.book,
-                    BibleChapter: verse.chapter,
-                    BibleVerse: verse.verse,
-                    BibleText: verse.text,
-                })),
-                createdAt: serverTimestamp(),
-                uid,
-                praises: [],
-                // comments as a subcollection
-                postId: uuid.v4(),
-                username,
-                userProfilePicture,
-            };
-
-            const collectionPath = postType === "public" ? "public" : "private";
-            const postCollection = collection(database, collectionPath);
-            const postDoc = doc(postCollection, postData.postId);
-
-            await setDoc(postDoc, postData);
-
-            Alert.alert(
-                "Success!",
-                "Your opinion has been posted.",
-                [             
-                    { text: "OK", onPress: () => navigation.goBack() }
-                ],
-                { cancelable: false }
-            );
-            navigation.goBack();
-
-        } catch (error) {
-            console.log(error);
-        }
-    };
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView
@@ -196,7 +92,7 @@ function BiblePost({ route, navigation }) {
                     style={pickerSelectStyles}
                     value={postType}
                 />
-                <TouchableOpacity style={styles.buttonContainer} onPress={postOpinion}>
+                <TouchableOpacity style={styles.buttonContainer} onPress={() => { postOpinion(Title, Content, postType, selectedVerses, navigation); }}>
                     <Text style={styles.buttonText}>Post</Text>
                 </TouchableOpacity>
             </KeyboardAvoidingView>

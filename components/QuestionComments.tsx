@@ -6,96 +6,17 @@ import { database } from '../config/firebase';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useQuestionCommentsLogic } from './utils/QuestionComments';
 
 const QuestionComments = ({postId}) => {
-  const [commentText, setCommentText] = useState('');
-  const [comments, setComments] = useState([]);
-
-  const auth = getAuth();
-  const user = auth.currentUser;
-  const uid = user?.uid; // Get the user's id
-
-  const handlePostComment = async () => {
-    // create a collection of comments for each post. Store the post ID in the comment document, so you can query for all comments for a post
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const uid = user.uid;
-    
-    const userDoc = await getDoc(doc(database, 'user', uid));
-        if (!userDoc.exists()) {
-            console.error('User not found in database');
-            return;
-        }
-
-        const username = userDoc.data().username;
-        const userProfilePicture = userDoc.data().profilePicture;
-
-    const comment = {
-      text: commentText,
-      postId: postId,
-      userId: user.uid,
-      createdAt: serverTimestamp(),
-      username: username,
-      userProfilePicture: userProfilePicture,
-      likes: [],
-      likesCount: 0,
-    };
-
-    const commentRef = collection(database, 'questions', postId, 'comments');
-    addDoc(commentRef, comment);
-    setCommentText('');
-  }
-
-  useEffect(() => {
-    const commentsQuery = query(collection(database, 'questions', postId, 'comments'));
-    const unsubscribe = onSnapshot(commentsQuery, (snapshot) => {
-      let comments = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setComments(comments);
-    });
-    return unsubscribe
-  }, [postId]);
-
-  const handleLike = async (comment) => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const uid = user.uid;
+  const {
+    commentText,
+    setCommentText,
+    comments,
+    handlePostComment,
+    handleLike
+  } = useQuestionCommentsLogic(postId);
   
-    const commentRef = doc(database, 'questions', postId, 'comments', comment.id);
-  
-    const isLiked = comment.likes.includes(uid);
-  
-    if(!isLiked){
-      await updateDoc(commentRef, {
-        likes: arrayUnion(uid),
-        likesCount: increment(1),
-      }).then(() => {
-        setComments((prevComments) => 
-          prevComments.map((item) => {
-            return item.id === comment.id ? {...item, likes: [...item.likes, uid]} : item;
-          })
-        );
-      });
-    } else {
-      await updateDoc(commentRef, {
-        likes: arrayRemove(uid),
-        likesCount: increment(-1),
-      }).then(() => {
-        setComments((prevComments) => 
-          prevComments.map((item) => {
-            return item.id === comment.id ? {...item, likes: item.likes.filter((like) => like !== uid)} : item;
-          })
-        );
-      });
-    }
-  }
-  
-
-
-
-
 return (
   <SafeAreaProvider>
     <ScrollView>

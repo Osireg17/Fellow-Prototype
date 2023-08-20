@@ -21,7 +21,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.osiobomighie.Fellowv2",
-      "buildNumber": "2.0.0"
+      "buildNumber": "3.0.1"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,7 +29,7 @@
         "backgroundColor": "#000000"
       },
       "package": "com.osiobomighie.Fellowv2",
-      "versionCode": 2
+      "versionCode": 6
     },
     "web": {
       "favicon": "./assets/favicon.png"

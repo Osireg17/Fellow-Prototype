@@ -1,17 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
 import RootNavigator from './navigations/Navigator';
-import {SafeAreaProvider} from 'react-native-safe-area-context'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { MenuProvider } from 'react-native-popup-menu';
 import 'react-native-gesture-handler';
+import { PaperProvider } from 'react-native-paper';
 
 export default function App() {
   return (
-      <SafeAreaProvider>
+    <SafeAreaProvider>
+      <PaperProvider>
         <MenuProvider>
-        <RootNavigator/>
-        <StatusBar/>
+          <RootNavigator />
+          <StatusBar />
         </MenuProvider>
-      </SafeAreaProvider> 
+      </PaperProvider>
+    </SafeAreaProvider>
   );
 }

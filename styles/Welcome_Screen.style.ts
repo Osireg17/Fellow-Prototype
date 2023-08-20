@@ -28,10 +28,9 @@ export default StyleSheet.create({
         paddingHorizontal: 25,
         alignItems: 'center',
         marginBottom: 25,
+        color: '#fff',
       },
       buttonText: {
         color: '#fff',
-        fontSize: 18,
-        fontFamily: 'Avenir'
       },
 })

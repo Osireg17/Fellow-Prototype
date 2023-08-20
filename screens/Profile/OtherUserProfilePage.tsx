@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, FlatList, Dimensions, Image } from 'react-native';
+import { Text, View, TouchableOpacity, FlatList, Dimensions, Image, Platform } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { doc, onSnapshot, updateDoc, arrayUnion, arrayRemove, collection, query, where, getDocs } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
@@ -8,30 +8,11 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import styles from '../../styles/Profile/OtherUserProfilePage.style'
 import { TabView, TabBar } from 'react-native-tab-view';
 import { AntDesign, } from '@expo/vector-icons';
-import { Header as HeaderRNE } from 'react-native-elements';
+
+import RenderHTML from 'react-native-render-html';
 
 
-function Header ({ navigation, username }) {
-  return (
-    <HeaderRNE 
-      leftComponent={
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="arrowleft" size={24} color="black" />
-        </TouchableOpacity>
-      }
-      centerComponent={{ text: `${username}`, style: { color: 'black', fontSize: 24 } }}
-      containerStyle={{
-        backgroundColor: 'white',
-        justifyContent: 'space-around',
-        height: 120,
-        paddingTop: 0,
-        borderBottomWidth: 0,
-        borderBottomColor: 'lightgrey',
-        marginTop: -30,
-      }}
-    />
-  )
-}
+
 
 function OtherUserProfile({ navigation, route }) {
   const { uid } = route.params;
@@ -115,7 +96,9 @@ function OtherUserProfile({ navigation, route }) {
   return (
     <SafeAreaProvider style={styles.container}>
       <View style={styles.profileContainer}>
-        <Header navigation={navigation} username={username} />
+        <View style={styles.header}>
+          <Text style={styles.username}>{username}</Text>
+        </View>
         <View style={styles.headerContainer}>
           <Avatar
             rounded
@@ -220,9 +203,10 @@ const PublicPostsRoute = ({ navigation, uid }) => {
                   <Text style={styles.postBibleReference}>
                     {info.BibleBook} {info.BibleChapter}:{info.BibleVerse}
                   </Text>
-                  <Text style={styles.postBibleText}>
-                    "{info.BibleText}"
-                  </Text>
+                  <RenderHTML
+                    contentWidth={Dimensions.get('window').width}
+                    source={{ html: info.BibleText }}
+                  />
                 </View>
               );
             })}
@@ -434,25 +418,24 @@ const OtherUserProfilePage = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaProvider>
-      <View style={styles.container}>
+    <SafeAreaProvider style={styles.container}>
         <OtherUserProfile navigation={navigation} route={route} />
         <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}
           onIndexChange={setIndex}
           initialLayout={{ width: Dimensions.get('window').width }}
+          style={{ backgroundColor: 'white', marginTop: Platform.OS === 'ios' ? 50 : 220 }}
           renderTabBar={props => (
             <TabBar
               {...props}
               indicatorStyle={{ backgroundColor: 'black' }}
-              style={{ backgroundColor: 'white', marginTop: 70 }}
               labelStyle={{ color: 'black' }}  // set color for labels
               activeColor="black"  // set active color for labels
+              style={{ backgroundColor: 'white' }} // set background color for tab bar
             />
           )}
         />
-      </View>
     </SafeAreaProvider>
   );
 }

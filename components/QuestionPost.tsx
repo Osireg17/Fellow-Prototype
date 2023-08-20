@@ -36,23 +36,6 @@ function QuestionPost({navigation}) {
   const [type, setType] = useState('public');
   const [loading, setLoading] = useState(false);
   
-
-  // TODO: create a firebase document for the current users questions
-  // - the document should have the following fields
-    // - question
-    // - userId
-    // - createdAt
-    // - subcollection of comments
-    // - post id
-    // - praises
-    // - praises count
-    // - profile picture
-    // - username
-// TODO: create a form to post a question
- // The form should allow for anonymous posting so that signed in users can post anonymously
-  // an anonymous post will hide the user's profile picture and username
-// 
-
   const postQuestion = async () => {
     if (Title === "" || Content === "" || type === "") {
       Alert.alert('Error', 'Please enter a title and question', [{
