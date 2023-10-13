@@ -1,12 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, TouchableOpacity, Pressable, SafeAreaView, Modal, ScrollView, FlatList, Dimensions, ActivityIndicator } from 'react-native';
-import styles from '../../styles/Feeds/Bible.styles'
-import { Header as HeaderRNE } from 'react-native-elements';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import AccordionItem from '../../components/AccordionItem';
-import RenderHtml from 'react-native-render-html';
-import BiblePageBottomSheet from '../../components/BiblePageBottomSheet';
+import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Pressable,
+  SafeAreaView,
+  Modal,
+  ScrollView,
+  FlatList,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
+import { Header as HeaderRNE } from "react-native-elements";
+import RenderHtml from "react-native-render-html";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+import AccordionItem from "../../components/AccordionItem";
+import BiblePageBottomSheet from "../../components/BiblePageBottomSheet";
+import styles from "../../styles/Feeds/Bible.styles";
 
 interface HeaderProps {
   selectedVersion: string;
@@ -16,39 +28,85 @@ interface HeaderProps {
   onPressBook: () => void;
 }
 
-function Header({ selectedVersion, selectedBook, selectedChapter, onPressVersion, onPressBook }: HeaderProps) {
+function Header({
+  selectedVersion,
+  selectedBook,
+  selectedChapter,
+  onPressVersion,
+  onPressBook,
+}: HeaderProps) {
   const navigation = useNavigation();
 
   return (
     <HeaderRNE
       containerStyle={styles.header}
-      leftComponent={{ icon: 'arrow-back', color: '#000', onPress: () => navigation.goBack() }}
+      leftComponent={{
+        icon: "arrow-back",
+        color: "#000",
+        onPress: () => navigation.goBack(),
+      }}
       centerComponent={
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Pressable style={styles.leftbutton} onPress={onPressBook}>
-            <Text style={styles.buttonText}>{selectedBook} {selectedChapter}</Text>
+            <Text style={styles.buttonText}>
+              {selectedBook} {selectedChapter}
+            </Text>
           </Pressable>
           <Pressable style={styles.rightbutton} onPress={onPressVersion}>
             <Text style={styles.buttonText}>{selectedVersion}</Text>
           </Pressable>
         </View>
       }
-      rightComponent={{ icon: 'search', color: '#000', onPress: () => { /* Your action here */ } }}
+      rightComponent={{
+        icon: "search",
+        color: "#000",
+        onPress: () => {
+          /* Your action here */
+        },
+      }}
     />
   );
 }
 
-
 export default function BiblePage() {
-  const windowWidth = Dimensions.get('window').width;
+  const windowWidth = Dimensions.get("window").width;
 
-  const EnglishBibleVersions = ["YLT", "KJV", "NKJV", "WEB", "RSV", "CJB", "TS2009", "LXXE", "TLV", "NASB", "ESV", "GNV", "DRB", "NIV2011", "NIV", "NLT", "NRSVCE", "NET", "NJB1985", "AMP", "MSG", "LSV"];
+  const EnglishBibleVersions = [
+    "YLT",
+    "KJV",
+    "NKJV",
+    "WEB",
+    "RSV",
+    "CJB",
+    "TS2009",
+    "LXXE",
+    "TLV",
+    "NASB",
+    "ESV",
+    "GNV",
+    "DRB",
+    "NIV2011",
+    "NIV",
+    "NLT",
+    "NRSVCE",
+    "NET",
+    "NJB1985",
+    "AMP",
+    "MSG",
+    "LSV",
+  ];
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleBook, setModalVisibleBook] = useState(false);
-  const [selectedVersion, setSelectedVersion] = useState('NIV');
-  const [selectedBook, setSelectedBook] = useState('Genesis');
-  const [selectedChapter, setSelectedChapter] = useState('1');
+  const [selectedVersion, setSelectedVersion] = useState("NIV");
+  const [selectedBook, setSelectedBook] = useState("Genesis");
+  const [selectedChapter, setSelectedChapter] = useState("1");
 
   const [versionsData, setVersionsData] = useState([]);
   const [booksData, setBooksData] = useState([]);
@@ -58,13 +116,12 @@ export default function BiblePage() {
 
   const [expandedAccordion, setExpandedAccordion] = useState(null);
   const [selectedVerses, setSelectedVerses] = useState([]);
-  const [selectedColor, setSelectedColor] = useState('red');
+  const [selectedColor, setSelectedColor] = useState("red");
   const [Loading, setLoading] = useState(false);
 
   function stripHtml(html) {
     return html.replace(/<\/?[^>]+(>|$)/g, "");
   }
-
 
   useEffect(() => {
     const getBibleVersions = async () => {
@@ -92,14 +149,14 @@ export default function BiblePage() {
         setBooksData(data);
 
         // Find the bookId of Genesis in the booksData
-        const genesisBook = data.find(book => book.name === 'Genesis');
+        const genesisBook = data.find((book) => book.name === "Genesis");
 
         if (genesisBook) {
           // Set the selectedBookId state here
           setSelectedBookId(genesisBook.bookid);
 
           // Fetch Genesis 1 text
-          handleChapterPress(genesisBook.bookid, '1');
+          handleChapterPress(genesisBook.bookid, "1");
         } else {
           console.error("Could not find Genesis in the books data");
         }
@@ -109,7 +166,7 @@ export default function BiblePage() {
     };
 
     getBibleVersions();
-    getInitialBooks();  // fetch the initial set of books for NIV version
+    getInitialBooks(); // fetch the initial set of books for NIV version
   }, []);
 
   const handleVersionPress = async (version: string) => {
@@ -133,19 +190,23 @@ export default function BiblePage() {
   const handleChapterPress = async (bookId: string, chapter: string) => {
     setLoading(true);
     try {
-      const response = await fetch(`https://bolls.life/get-text/${selectedVersion}/${bookId}/${chapter}/`);
+      const response = await fetch(
+        `https://bolls.life/get-text/${selectedVersion}/${bookId}/${chapter}/`,
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       let data = await response.json();
       // console.log("Received data from fetch:", data);
       // Manipulate the data here to modify the text field
-      data = data.map(item => {
-        const parts = item.text.split('<br/>');
+      data = data.map((item) => {
+        const parts = item.text.split("<br/>");
         if (parts.length > 1) {
           return {
             ...item,
-            text: `<p style="font-weight: bold; text-align: center;">${parts[0]}</p><br/>${parts.slice(1).join('<br/>')}`
+            text: `<p style="font-weight: bold; text-align: center;">${
+              parts[0]
+            }</p><br/>${parts.slice(1).join("<br/>")}`,
           };
         }
         return item;
@@ -156,13 +217,12 @@ export default function BiblePage() {
       setModalVisibleBook(false);
     } catch (error) {
       console.error(error);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
 
-  const handleBookPress = (book: any, chapter: string = '1') => {
+  const handleBookPress = (book: any, chapter: string = "1") => {
     setSelectedBook(book.name);
     setSelectedChapter(chapter);
 
@@ -170,13 +230,21 @@ export default function BiblePage() {
     setSelectedBookId(book.bookid);
 
     // Create an array of chapters from 1 to book.chapters
-    const chaptersArray = Array.from({ length: book.chapters }, (_, i) => i + 1);
+    const chaptersArray = Array.from(
+      { length: book.chapters },
+      (_, i) => i + 1,
+    );
 
     setSelectedChapters(chaptersArray);
   };
 
-
-  const ChapterGrid = ({ chapters, bookId }: { chapters: number, bookId: string }) => {
+  const ChapterGrid = ({
+    chapters,
+    bookId,
+  }: {
+    chapters: number;
+    bookId: string;
+  }) => {
     const grid = [];
     for (let i = 1; i <= chapters; i++) {
       grid.push(
@@ -186,7 +254,7 @@ export default function BiblePage() {
           onPress={() => handleChapterPress(bookId, i)}
         >
           <Text style={styles.chapterText}>{i}</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>,
       );
     }
     return <View style={styles.chapterGrid}>{grid}</View>;
@@ -205,13 +273,22 @@ export default function BiblePage() {
   const bottomSheetRef = useRef(null);
 
   const onVersePress = (verse: any) => {
-    const isSelected = selectedVerses.find(item => item.pk === verse.pk);
+    const isSelected = selectedVerses.find((item) => item.pk === verse.pk);
 
     if (isSelected) {
-      setSelectedVerses(selectedVerses.filter(item => item.pk !== verse.pk));
+      setSelectedVerses(selectedVerses.filter((item) => item.pk !== verse.pk));
     } else {
       // add the verse.pk and the verse.text to the selectedVerses array
-      setSelectedVerses([...selectedVerses, { pk: verse.pk, text: verse.text, book: selectedBook, chapter: selectedChapter, verse: verse.verse }]);
+      setSelectedVerses([
+        ...selectedVerses,
+        {
+          pk: verse.pk,
+          text: verse.text,
+          book: selectedBook,
+          chapter: selectedChapter,
+          verse: verse.verse,
+        },
+      ]);
     }
 
     bottomSheetRef.current?.expand();
@@ -234,7 +311,6 @@ export default function BiblePage() {
     setSelectedVerses([]);
   }, [selectedBook]);
 
-
   // if the user switches to a different version get the book for that version, for example, if I was on Samuel 1 for NIV and I switch to KJV, I want to get Samuel 1 for KJV, also change the selectedBook to the book of the new version
   useEffect(() => {
     if (selectedBookId) {
@@ -242,14 +318,10 @@ export default function BiblePage() {
     }
   }, [selectedVersion]);
 
-
-
-
-
   return (
     <SafeAreaProvider
       style={{
-        backgroundColor: '#FBF8F8',
+        backgroundColor: "#FBF8F8",
         flex: 1,
       }}
     >
@@ -261,11 +333,11 @@ export default function BiblePage() {
         onPressBook={() => setModalVisibleBook(true)}
       />
 
-      {Loading ?
+      {Loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#282C35" />
         </View>
-        :
+      ) : (
         <FlatList
           contentContainerStyle={{ paddingBottom: 100 }}
           data={versesData}
@@ -273,25 +345,25 @@ export default function BiblePage() {
             <TouchableOpacity onPress={() => onVersePress(item)}>
               <RenderHtml
                 source={{
-                  html: selectedVerses.find(verse => verse.pk === item.pk)
-                    ? item.text.includes('<sup>')
-                      ? `<u style="border-bottom: 1px dashed; background-color: ${selectedColor};">${item.text.split('<sup>')[0]}</u><sup>${item.text.split('<sup>')[1]}</sup>`
+                  html: selectedVerses.find((verse) => verse.pk === item.pk)
+                    ? item.text.includes("<sup>")
+                      ? `<u style="border-bottom: 1px dashed; background-color: ${selectedColor};">${
+                          item.text.split("<sup>")[0]
+                        }</u><sup>${item.text.split("<sup>")[1]}</sup>`
                       : `<u style="border-bottom: 1px dashed; background-color: ${selectedColor};">${item.text}</u>`
-                    : `${item.text}<sup>${item.verse}</sup>`
+                    : `${item.text}<sup>${item.verse}</sup>`,
                 }}
                 baseStyle={styles.verseText}
                 contentWidth={windowWidth}
               />
-
-
             </TouchableOpacity>
           )}
-          keyExtractor={item => item.pk.toString()}
+          keyExtractor={(item) => item.pk.toString()}
         />
-      }
+      )}
       <Modal
         animationType="slide"
-        transparent={true}
+        transparent
         visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
@@ -321,11 +393,12 @@ export default function BiblePage() {
 
       <Modal
         animationType="slide"
-        transparent={true}
+        transparent
         visible={modalVisibleBook}
         onRequestClose={() => {
           setModalVisibleBook(!modalVisibleBook);
-        }}>
+        }}
+      >
         <SafeAreaView style={styles.modalView}>
           <ScrollView contentContainerStyle={styles.modalContent}>
             <Text style={styles.modalTitle}>Pick a book</Text>
@@ -340,12 +413,12 @@ export default function BiblePage() {
               >
                 <ChapterGrid chapters={book.chapters} bookId={book.bookid} />
               </AccordionItem>
-
             ))}
           </ScrollView>
           <Pressable
             style={[styles.button, styles.buttonClose]}
-            onPress={() => setModalVisibleBook(false)}>
+            onPress={() => setModalVisibleBook(false)}
+          >
             <Text style={styles.textStyle}>Close</Text>
           </Pressable>
         </SafeAreaView>

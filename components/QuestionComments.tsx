@@ -1,14 +1,37 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput } from 'react-native'
-import React,{useState, useEffect} from 'react'
-import { getAuth } from 'firebase/auth';
-import { doc, getDoc, collection, getDocs, onSnapshot, query, updateDoc, arrayUnion, arrayRemove, where, orderBy, serverTimestamp, addDoc, increment} from "firebase/firestore";
-import { database } from '../config/firebase';
-import { Ionicons } from '@expo/vector-icons';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ScrollView } from 'react-native-gesture-handler';
+import { Ionicons } from "@expo/vector-icons";
+import { getAuth } from "firebase/auth";
+import {
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  where,
+  orderBy,
+  serverTimestamp,
+  addDoc,
+  increment,
+} from "firebase/firestore";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  TextInput,
+} from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-const QuestionComments = ({postId}) => {
-  const [commentText, setCommentText] = useState('');
+import { database } from "../config/firebase";
+
+const QuestionComments = ({ postId }) => {
+  const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState([]);
 
   const auth = getAuth();
@@ -20,62 +43,72 @@ const QuestionComments = ({postId}) => {
     const auth = getAuth();
     const user = auth.currentUser;
     const uid = user.uid;
-    
-    const userDoc = await getDoc(doc(database, 'user', uid));
-        if (!userDoc.exists()) {
-            console.error('User not found in database');
-            return;
-        }
 
-        const username = userDoc.data().username;
-        const userProfilePicture = userDoc.data().profilePicture;
+    const userDoc = await getDoc(doc(database, "user", uid));
+    if (!userDoc.exists()) {
+      console.error("User not found in database");
+      return;
+    }
+
+    const username = userDoc.data().username;
+    const userProfilePicture = userDoc.data().profilePicture;
 
     const comment = {
       text: commentText,
-      postId: postId,
+      postId,
       userId: user.uid,
       createdAt: serverTimestamp(),
-      username: username,
-      userProfilePicture: userProfilePicture,
+      username,
+      userProfilePicture,
       likes: [],
       likesCount: 0,
     };
 
-    const commentRef = collection(database, 'questions', postId, 'comments');
+    const commentRef = collection(database, "questions", postId, "comments");
     addDoc(commentRef, comment);
-    setCommentText('');
-  }
+    setCommentText("");
+  };
 
   useEffect(() => {
-    const commentsQuery = query(collection(database, 'questions', postId, 'comments'));
+    const commentsQuery = query(
+      collection(database, "questions", postId, "comments"),
+    );
     const unsubscribe = onSnapshot(commentsQuery, (snapshot) => {
-      let comments = snapshot.docs.map((doc) => ({
+      const comments = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
       setComments(comments);
     });
-    return unsubscribe
+    return unsubscribe;
   }, [postId]);
 
   const handleLike = async (comment) => {
     const auth = getAuth();
     const user = auth.currentUser;
     const uid = user.uid;
-  
-    const commentRef = doc(database, 'questions', postId, 'comments', comment.id);
-  
+
+    const commentRef = doc(
+      database,
+      "questions",
+      postId,
+      "comments",
+      comment.id,
+    );
+
     const isLiked = comment.likes.includes(uid);
-  
-    if(!isLiked){
+
+    if (!isLiked) {
       await updateDoc(commentRef, {
         likes: arrayUnion(uid),
         likesCount: increment(1),
       }).then(() => {
-        setComments((prevComments) => 
+        setComments((prevComments) =>
           prevComments.map((item) => {
-            return item.id === comment.id ? {...item, likes: [...item.likes, uid]} : item;
-          })
+            return item.id === comment.id
+              ? { ...item, likes: [...item.likes, uid] }
+              : item;
+          }),
         );
       });
     } else {
@@ -83,93 +116,96 @@ const QuestionComments = ({postId}) => {
         likes: arrayRemove(uid),
         likesCount: increment(-1),
       }).then(() => {
-        setComments((prevComments) => 
+        setComments((prevComments) =>
           prevComments.map((item) => {
-            return item.id === comment.id ? {...item, likes: item.likes.filter((like) => like !== uid)} : item;
-          })
+            return item.id === comment.id
+              ? { ...item, likes: item.likes.filter((like) => like !== uid) }
+              : item;
+          }),
         );
       });
     }
-  }
-  
+  };
 
-
-
-
-return (
-  <SafeAreaProvider>
-    <ScrollView>
-      <View>
-        <View style={styles.commentInputContainer}>
-          <TextInput
-            style={styles.commentInput}
-            placeholder="Add a comment..."
-            value={commentText}
-            onChangeText={setCommentText}
-          />
-          <TouchableOpacity onPress={handlePostComment}>
-            <Ionicons name="send" size={20} color="black" />
-          </TouchableOpacity>
-        </View>
-        {comments.map((comment) => (
-          <View key={comment.id} style={styles.comment}>
-            <View style={styles.commentHeader}>
-              <Image
-                source={{ uri: comment.userProfilePicture || 'https://via.placeholder.com/30' }}
-                style={styles.commentUserImage}
-              />
-              <Text style={styles.commentUsername}>{comment.username}</Text>
-            </View>
-            <View style={styles.commentContent}>
-              <Text style={styles.commentText}>{comment.text}</Text>
-            </View>
-            <View style={styles.likeSection}>
-              <TouchableOpacity onPress={() => handleLike(comment)}>
-                <Ionicons 
-                  name={comment.likes.includes(uid) ? "heart" : "heart-outline"} 
-                  size={24} 
-                  color={comment.likes.includes(uid) ? "red" : "black"} 
-                />
-              </TouchableOpacity>
-              <Text style={styles.likesCount}>{comment.likes.length}</Text>
-            </View>
+  return (
+    <SafeAreaProvider>
+      <ScrollView>
+        <View>
+          <View style={styles.commentInputContainer}>
+            <TextInput
+              style={styles.commentInput}
+              placeholder="Add a comment..."
+              value={commentText}
+              onChangeText={setCommentText}
+            />
+            <TouchableOpacity onPress={handlePostComment}>
+              <Ionicons name="send" size={20} color="black" />
+            </TouchableOpacity>
           </View>
-        ))}
-      </View>
-    </ScrollView>
-  </SafeAreaProvider>
-)
+          {comments.map((comment) => (
+            <View key={comment.id} style={styles.comment}>
+              <View style={styles.commentHeader}>
+                <Image
+                  source={{
+                    uri:
+                      comment.userProfilePicture ||
+                      "https://via.placeholder.com/30",
+                  }}
+                  style={styles.commentUserImage}
+                />
+                <Text style={styles.commentUsername}>{comment.username}</Text>
+              </View>
+              <View style={styles.commentContent}>
+                <Text style={styles.commentText}>{comment.text}</Text>
+              </View>
+              <View style={styles.likeSection}>
+                <TouchableOpacity onPress={() => handleLike(comment)}>
+                  <Ionicons
+                    name={
+                      comment.likes.includes(uid) ? "heart" : "heart-outline"
+                    }
+                    size={24}
+                    color={comment.likes.includes(uid) ? "red" : "black"}
+                  />
+                </TouchableOpacity>
+                <Text style={styles.likesCount}>{comment.likes.length}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaProvider>
+  );
+};
 
-}
-
-export default QuestionComments
+export default QuestionComments;
 
 const styles = StyleSheet.create({
   commentInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 5,
-    backgroundColor: '#f1f1f1',
+    backgroundColor: "#f1f1f1",
   },
   commentInput: {
     flex: 1,
     marginRight: 10,
     borderRadius: 15,
     paddingHorizontal: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     height: 35,
   },
   comment: {
     marginTop: 5,
     padding: 10,
     marginBottom: 0,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
     borderRadius: 5,
   },
   commentHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 5,
   },
   commentUserImage: {
@@ -186,14 +222,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   likeSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   likesCount: {
     marginLeft: 5,
   },
   commentContent: {
-    backgroundColor: '#ddd',
+    backgroundColor: "#ddd",
     padding: 10,
     borderRadius: 5,
   },

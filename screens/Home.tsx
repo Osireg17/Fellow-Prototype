@@ -1,25 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import { FontAwesome, AntDesign, Ionicons } from "@expo/vector-icons";
+import { getAuth } from "firebase/auth";
+import {
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  where,
+  orderBy,
+} from "firebase/firestore";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
   Image,
-  Text, ScrollView,
+  Text,
+  ScrollView,
   FlatList,
-  Dimensions
-} from 'react-native';
-import { Header as HeaderRNE } from 'react-native-elements';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { FontAwesome, AntDesign, Ionicons } from '@expo/vector-icons';
-import { TabView, TabBar } from 'react-native-tab-view';
-import { database } from '../config/firebase';
-import { doc, getDoc, collection, getDocs, onSnapshot, query, updateDoc, arrayUnion, arrayRemove, where, orderBy } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+  Dimensions,
+} from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
+import { Header as HeaderRNE } from "react-native-elements";
+import RenderHTML from "react-native-render-html";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { TabView, TabBar } from "react-native-tab-view";
+import { Card } from "react-native-ui-lib";
+
+import { database } from "../config/firebase";
 import styles from "../styles/Home.style";
-import DropDownPicker from 'react-native-dropdown-picker';
-import RenderHTML from 'react-native-render-html';
-import { Card } from 'react-native-ui-lib';
-
-
 
 async function fetchProfilePicture(uid) {
   try {
@@ -30,24 +42,25 @@ async function fetchProfilePicture(uid) {
       return userDocSnap.data().profilePicture;
     } else {
       console.log("No such document!");
-      return '';
+      return "";
     }
   } catch (error) {
     console.log("Error fetching user's profile picture:", error);
-    return '';
+    return "";
   }
 }
 
-
 function getAllPublicPosts(setPublicPosts, value) {
-  const q = query(
-    collection(database, "public"),
-    orderBy("createdAt", "desc"));
+  const q = query(collection(database, "public"), orderBy("createdAt", "desc"));
 
   return onSnapshot(q, (querySnapshot) => {
     let posts = [];
     querySnapshot.forEach((doc) => {
-      posts.push({ ...doc.data(), id: doc.id, createdAt: doc.data().createdAt });
+      posts.push({
+        ...doc.data(),
+        id: doc.id,
+        createdAt: doc.data().createdAt,
+      });
     });
 
     posts = sortPosts(posts, value); // Sort the posts
@@ -59,7 +72,7 @@ function getAllPrivatePosts(setPrivatePosts, value) {
   const auth = getAuth();
   const currentUserUid = auth.currentUser.uid;
 
-  const currentUserDocRef = doc(database, 'user', currentUserUid);
+  const currentUserDocRef = doc(database, "user", currentUserUid);
 
   onSnapshot(currentUserDocRef, (currentUserDocSnap) => {
     const data = currentUserDocSnap.data();
@@ -72,11 +85,10 @@ function getAllPrivatePosts(setPrivatePosts, value) {
       uids = [currentUserUid];
     }
 
-
     const q = query(
       collection(database, "private"),
       where("uid", "in", uids),
-      orderBy("createdAt", "desc")
+      orderBy("createdAt", "desc"),
     );
 
     onSnapshot(q, (querySnapshot) => {
@@ -97,23 +109,21 @@ function getAllPrivatePosts(setPrivatePosts, value) {
   });
 }
 
-
 function sortPosts(posts, value) {
   // Define a function that sorts posts based on the value of the dropdown
   switch (value) {
-    case 'trending':
+    case "trending":
       // Sort posts in descending order by likes
       return posts.sort((a, b) => b.praises.length - a.praises.length);
-    case 'latest':
+    case "latest":
       // Sort posts in descending order by creation time
       return posts.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
-    case 'home':
+    case "home":
     default:
       // Return posts as they are
       return posts;
   }
 }
-
 
 const PostStats = ({ post, uid, onPraiseUpdate, onCommentClick, postType }) => {
   const [praises, setPraises] = useState(post.praises);
@@ -122,15 +132,14 @@ const PostStats = ({ post, uid, onPraiseUpdate, onCommentClick, postType }) => {
 
   const fetchComments = async () => {
     // Get a reference to the comments subcollection
-    const commentsRef = collection(database, postType, post.postId, 'comments');
+    const commentsRef = collection(database, postType, post.postId, "comments");
 
     // Fetch the comments
     const querySnapshot = await getDocs(commentsRef);
 
     // Update the state with the new comments
-    setComments(querySnapshot.docs.map(doc => doc.data()));
+    setComments(querySnapshot.docs.map((doc) => doc.data()));
   };
-
 
   const handleLikePress = async () => {
     if (!liked) {
@@ -143,21 +152,23 @@ const PostStats = ({ post, uid, onPraiseUpdate, onCommentClick, postType }) => {
     } else {
       await updateDoc(doc(database, postType, post.postId), {
         praises: arrayRemove(uid),
-        praisesCount: post.praises.length - 1
+        praisesCount: post.praises.length - 1,
       });
-      setPraises(post.praises.filter(praise => praise !== uid));
+      setPraises(post.praises.filter((praise) => praise !== uid));
       setLiked(false);
     }
 
     updateTotalUserPraises(post.uid);
-
   };
 
   const updateTotalUserPraises = async (uid) => {
     const userDocRef = doc(database, "user", uid);
 
     // Get every post that has the same uid as the current user
-    const userPostsQuery = query(collection(database, "public"), where("uid", "==", uid));
+    const userPostsQuery = query(
+      collection(database, "public"),
+      where("uid", "==", uid),
+    );
 
     // Fetch posts
     const querySnapshot = await getDocs(userPostsQuery);
@@ -170,7 +181,7 @@ const PostStats = ({ post, uid, onPraiseUpdate, onCommentClick, postType }) => {
 
     // Update the user document with totalPraises
     await updateDoc(userDocRef, {
-      totalPraises: totalPraises
+      totalPraises,
     });
   };
 
@@ -207,24 +218,24 @@ const PostStats = ({ post, uid, onPraiseUpdate, onCommentClick, postType }) => {
 export default function MainFeed({ navigation }) {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: 'first', title: 'For You' },
-    { key: 'second', title: 'Following' },
+    { key: "first", title: "For You" },
+    { key: "second", title: "Following" },
   ]);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    { label: 'Trending', value: 'trending' },
+    { label: "Trending", value: "trending" },
     {
-      label: 'Latest',
-      value: 'latest',
+      label: "Latest",
+      value: "latest",
     },
     {
-      label: 'Home',
-      value: 'Home',
-    }
+      label: "Home",
+      value: "Home",
+    },
   ]);
-  const [profilePicture, setProfilePicture] = useState('');
+  const [profilePicture, setProfilePicture] = useState("");
   const [publicPosts, setPublicPosts] = useState([]);
   const [privatePosts, setPrivatePosts] = useState([]);
 
@@ -233,16 +244,15 @@ export default function MainFeed({ navigation }) {
 
   useEffect(() => {
     fetchProfilePicture(uid).then((pictureUrl) => {
-      console.log('Profile picture URL:', pictureUrl);
+      console.log("Profile picture URL:", pictureUrl);
       setProfilePicture(pictureUrl);
-
     });
   }, [uid]);
 
   const NavigateToProfile = () => {
     //complete the function to navigate to the profile page
-    navigation.navigate('Profile');
-  }
+    navigation.navigate("Profile");
+  };
 
   const handleSearchIconPress = () => {
     setSearchBarVisible(true);
@@ -269,34 +279,51 @@ export default function MainFeed({ navigation }) {
     });
   };
 
-
   const FirstRoute = ({ publicPosts }) => (
-    <View style={[styles.scene, { backgroundColor: '#FBF8F8' }]}>
+    <View style={[styles.scene, { backgroundColor: "#FBF8F8" }]}>
       <FlatList
         data={publicPosts}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => {
-          const createdAt = item.createdAt ? item.createdAt.toDate().toLocaleString() : '';
+          const createdAt = item.createdAt
+            ? item.createdAt.toDate().toLocaleString()
+            : "";
           const isReadMore = readMoreState[index];
           return (
             <Card key={index} containerStyle={styles.postContainer}>
               <View style={styles.postHeader}>
                 <Text style={styles.postTitle}>{item.Title}</Text>
                 <View style={styles.postUser}>
-                  <TouchableOpacity onPress={() => {
-                    if (item.uid === uid) { navigation.navigate('Profile'); } else {
-                      navigation.navigate('OtherUserProfilePage', { uid: item.uid });
-                    }
-                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (item.uid === uid) {
+                        navigation.navigate("Profile");
+                      } else {
+                        navigation.navigate("OtherUserProfilePage", {
+                          uid: item.uid,
+                        });
+                      }
+                    }}
+                  >
                     <Text style={styles.postUsername}>{item.username}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => {
-                    if (item.uid === uid) { navigation.navigate('Profile'); } else {
-                      navigation.navigate('OtherUserProfilePage', { uid: item.uid });
-                    }
-                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (item.uid === uid) {
+                        navigation.navigate("Profile");
+                      } else {
+                        navigation.navigate("OtherUserProfilePage", {
+                          uid: item.uid,
+                        });
+                      }
+                    }}
+                  >
                     <Image
-                      source={{ uri: item.userProfilePicture || 'https://via.placeholder.com/40' }}
+                      source={{
+                        uri:
+                          item.userProfilePicture ||
+                          "https://via.placeholder.com/40",
+                      }}
                       style={styles.postUserImage}
                     />
                   </TouchableOpacity>
@@ -309,7 +336,7 @@ export default function MainFeed({ navigation }) {
                       {info.BibleBook} {info.BibleChapter}:{info.BibleVerse}
                     </Text>
                     <RenderHTML
-                      contentWidth={Dimensions.get('window').width}
+                      contentWidth={Dimensions.get("window").width}
                       source={{ html: info.BibleText }}
                     />
                   </View>
@@ -324,8 +351,8 @@ export default function MainFeed({ navigation }) {
                 </Text>
                 {item.Content.length > 200 && (
                   <TouchableOpacity onPress={() => toggleReadMore(index)}>
-                    <Text style={{ color: 'black' }}>
-                      {isReadMore ? 'Read Less' : 'Read More'}
+                    <Text style={{ color: "black" }}>
+                      {isReadMore ? "Read Less" : "Read More"}
                     </Text>
                   </TouchableOpacity>
                 )}
@@ -339,9 +366,12 @@ export default function MainFeed({ navigation }) {
                   setPublicPosts([...publicPosts]);
                 }}
                 onCommentClick={() => {
-                  navigation.navigate('CommentsPage', { postId: item.id, post: item });
+                  navigation.navigate("CommentsPage", {
+                    postId: item.id,
+                    post: item,
+                  });
                 }}
-                postType={'public'}
+                postType="public"
               />
             </Card>
           );
@@ -350,32 +380,49 @@ export default function MainFeed({ navigation }) {
     </View>
   );
 
-
   const SecondRoute = () => (
-    <View style={[styles.scene, { backgroundColor: '#FBF8F8' }]}>
+    <View style={[styles.scene, { backgroundColor: "#FBF8F8" }]}>
       <ScrollView>
         {privatePosts.map((post, index) => {
-          const createdAt = post.createdAt ? post.createdAt.toDate().toLocaleString() : '';
+          const createdAt = post.createdAt
+            ? post.createdAt.toDate().toLocaleString()
+            : "";
           const isReadMore = readMoreState[index];
           return (
             <Card key={index} containerStyle={styles.postContainer}>
               <View style={styles.postHeader}>
                 <Text style={styles.postTitle}>{post.Title}</Text>
                 <View style={styles.postUser}>
-                  <TouchableOpacity onPress={() => {
-                    if (post.uid === uid) { navigation.navigate('Profile'); } else {
-                      navigation.navigate('OtherUserProfilePage', { uid: post.uid });
-                    }
-                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (post.uid === uid) {
+                        navigation.navigate("Profile");
+                      } else {
+                        navigation.navigate("OtherUserProfilePage", {
+                          uid: post.uid,
+                        });
+                      }
+                    }}
+                  >
                     <Text style={styles.postUsername}>{post.username}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => {
-                    if (post.uid === uid) { navigation.navigate('Profile'); } else {
-                      navigation.navigate('OtherUserProfilePage', { uid: post.uid });
-                    }
-                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (post.uid === uid) {
+                        navigation.navigate("Profile");
+                      } else {
+                        navigation.navigate("OtherUserProfilePage", {
+                          uid: post.uid,
+                        });
+                      }
+                    }}
+                  >
                     <Image
-                      source={{ uri: post.userProfilePicture || 'https://via.placeholder.com/40' }}
+                      source={{
+                        uri:
+                          post.userProfilePicture ||
+                          "https://via.placeholder.com/40",
+                      }}
                       style={styles.postUserImage}
                     />
                   </TouchableOpacity>
@@ -388,12 +435,11 @@ export default function MainFeed({ navigation }) {
                     {info.BibleBook} {info.BibleChapter}:{info.BibleVerse}
                   </Text>
                   <RenderHTML
-                    contentWidth={Dimensions.get('window').width}
+                    contentWidth={Dimensions.get("window").width}
                     source={{ html: info.BibleText }}
                   />
                 </View>
               ))}
-
 
               <View>
                 <Text
@@ -404,14 +450,13 @@ export default function MainFeed({ navigation }) {
                 </Text>
                 {post.Content.length > 200 && (
                   <TouchableOpacity onPress={() => toggleReadMore(index)}>
-                    <Text style={{ color: 'black' }}>
-                      {isReadMore ? 'Read Less' : 'Read More'}
+                    <Text style={{ color: "black" }}>
+                      {isReadMore ? "Read Less" : "Read More"}
                     </Text>
                   </TouchableOpacity>
                 )}
               </View>
               <Text style={styles.postTimestamp}>{createdAt}</Text>
-
 
               <PostStats
                 uid={uid}
@@ -421,9 +466,12 @@ export default function MainFeed({ navigation }) {
                   setPrivatePosts([...privatePosts]);
                 }}
                 onCommentClick={() => {
-                  navigation.navigate('CommentsPage', { postId: post.id, post: post });
+                  navigation.navigate("CommentsPage", {
+                    postId: post.id,
+                    post,
+                  });
                 }}
-                postType={'private'}
+                postType="private"
               />
             </Card>
           );
@@ -434,11 +482,10 @@ export default function MainFeed({ navigation }) {
 
   const renderScene = ({ route }) => {
     switch (route.key) {
-      case 'first':
+      case "first":
         return <FirstRoute publicPosts={publicPosts} />;
-      case 'second':
-        return <SecondRoute privatePosts={privatePosts}
-        />;
+      case "second":
+        return <SecondRoute privatePosts={privatePosts} />;
       default:
         return null;
     }
@@ -452,13 +499,13 @@ export default function MainFeed({ navigation }) {
             height: 100,
             paddingBottom: 30,
             paddingTop: 20,
-            backgroundColor: '#FFFFFF',
-            zIndex: 100
+            backgroundColor: "#FFFFFF",
+            zIndex: 100,
           }}
           leftComponent={
             <View style={styles.dropdownContainer}>
               <DropDownPicker
-                placeholder='Home'
+                placeholder="Home"
                 open={open}
                 value={value}
                 items={items}
@@ -476,19 +523,19 @@ export default function MainFeed({ navigation }) {
                   height: 40,
                   borderRadius: 0,
                 }}
-
               />
             </View>
           }
           rightComponent={
             <View style={styles.rightComponent}>
-              <TouchableOpacity style={styles.searchIconContainer} onPress={() => {
-                navigation.navigate('SearchPage');
-              }
-              }>
+              <TouchableOpacity
+                style={styles.searchIconContainer}
+                onPress={() => {
+                  navigation.navigate("SearchPage");
+                }}
+              >
                 <Ionicons name="search" size={24} color="black" />
               </TouchableOpacity>
-
             </View>
           }
         />
@@ -496,7 +543,7 @@ export default function MainFeed({ navigation }) {
           navigationState={{ index, routes }}
           onIndexChange={setIndex}
           renderScene={renderScene}
-          animationEnabled={true}
+          animationEnabled
           renderTabBar={(props) => (
             <TabBar
               {...props}

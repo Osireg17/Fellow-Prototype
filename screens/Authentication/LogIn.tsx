@@ -1,3 +1,10 @@
+import { Ionicons } from "@expo/vector-icons";
+import * as AppleAuthentication from "expo-apple-authentication";
+import {
+  signInWithEmailAndPassword,
+  OAuthProvider,
+  signInWithCredential,
+} from "firebase/auth";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -10,12 +17,10 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { signInWithEmailAndPassword, OAuthProvider, signInWithCredential,  } from "firebase/auth";
-import { auth } from "../../config/firebase";
-import * as AppleAuthentication from 'expo-apple-authentication';
-import { styles } from "../../styles/Authentication/LogIn.style";
 import { Button } from "react-native-ui-lib";
+
+import { auth } from "../../config/firebase";
+import { styles } from "../../styles/Authentication/LogIn.style";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -53,79 +58,86 @@ export default function Login({ navigation }) {
       });
       const { identityToken } = AppleCredentials;
     } catch (err: any) {
-      if (err.code === 'ERR_CANCELED') {
-        alert('You must sign in with Apple to continue');
+      if (err.code === "ERR_CANCELED") {
+        alert("You must sign in with Apple to continue");
       } else {
         alert(err);
       }
-
     }
   };
 
-    const onHandleLogin = () => {
-      if (validateFields()) {
-        signInWithEmailAndPassword(auth, email, password)
-          .then(() => {
-            console.log("Login Success");
-            navigation.navigate("Feeds");
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Feeds" }],
-            })
-          })
-          .catch((err) => Alert.alert("Login error", err.message));
-      }
-    };
-    return (
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 0}
-      >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.container}>
+  const onHandleLogin = () => {
+    if (validateFields()) {
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          console.log("Login Success");
+          navigation.navigate("Feeds");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Feeds" }],
+          });
+        })
+        .catch((err) => Alert.alert("Login error", err.message));
+    }
+  };
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 0}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={styles.backArrowContainer}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="arrow-back" size={24} color="black" />
+          </TouchableOpacity>
+          <View style={styles.loginWrapper}>
+            <Text style={styles.loginTitle}>Login</Text>
+            <TextInput
+              style={[styles.input, emailError ? styles.errorInput : null]}
+              placeholder="Email Address"
+              placeholderTextColor="#B0B0B0"
+              keyboardType="email-address"
+              onChangeText={(text) => setEmail(text)}
+              value={email}
+            />
+            {emailError && (
+              <Text style={styles.errorText}>Please enter your email.</Text>
+            )}
+            <TextInput
+              style={[styles.input, passwordError ? styles.errorInput : null]}
+              placeholder="Password"
+              placeholderTextColor="#B0B0B0"
+              secureTextEntry
+              onChangeText={(text) => setPassword(text)}
+              value={password}
+            />
+            {passwordError && (
+              <Text style={styles.errorText}>Please enter your password.</Text>
+            )}
             <TouchableOpacity
-              style={styles.backArrowContainer}
-              onPress={() => navigation.goBack()}
+              style={styles.forgotPasswordContainer}
+              onPress={() => navigation.navigate("ForgotPassword")}
             >
-              <Ionicons name="arrow-back" size={24} color="black" />
+              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
-            <View style={styles.loginWrapper}>
-              <Text style={styles.loginTitle}>Login</Text>
-              <TextInput
-                style={[styles.input, emailError ? styles.errorInput : null]}
-                placeholder="Email Address"
-                placeholderTextColor="#B0B0B0"
-                keyboardType="email-address"
-                onChangeText={(text) => setEmail(text)}
-                value={email}
-              />
-              {emailError && <Text style={styles.errorText}>Please enter your email.</Text>}
-              <TextInput
-                style={[styles.input, passwordError ? styles.errorInput : null]}
-                placeholder="Password"
-                placeholderTextColor="#B0B0B0"
-                secureTextEntry
-                onChangeText={(text) => setPassword(text)}
-                value={password}
-              />
-              {passwordError && <Text style={styles.errorText}>Please enter your password.</Text>}
-              <TouchableOpacity
-                style={styles.forgotPasswordContainer}
-                onPress={() => navigation.navigate("ForgotPassword")}
-              >
-                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-              </TouchableOpacity>
-              <Button style={styles.loginButton} label="Login" onPress={onHandleLogin} />
-            </View>
-            <TouchableOpacity
-              style={styles.registerTextContainer}
-              onPress={() => navigation.navigate("SignUp")}
-            >
-              <Text style={styles.registerText}>Register an account</Text>
-            </TouchableOpacity>
+            <Button
+              style={styles.loginButton}
+              label="Login"
+              onPress={onHandleLogin}
+            />
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    );
-  }
+          <TouchableOpacity
+            style={styles.registerTextContainer}
+            onPress={() => navigation.navigate("SignUp")}
+          >
+            <Text style={styles.registerText}>Register an account</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+}

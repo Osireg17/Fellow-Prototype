@@ -1,10 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
-import { getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
-import { getStorage } from 'firebase/storage'
-import { initializeFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getFirestore, initializeFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
@@ -16,7 +15,7 @@ const firebaseConfig = {
   storageBucket: "fellow-database-1.appspot.com",
   messagingSenderId: "96165196004",
   appId: "1:96165196004:web:ac291cfd9c4d9cf4cffcf1",
-  measurementId: "G-X43V8CTSSR"
+  measurementId: "G-X43V8CTSSR",
 };
 
 // Initialize Firebase
@@ -29,4 +28,4 @@ const database = initializeFirestore(app, {
 });
 const storage = getStorage();
 
-export { auth, database, storage }
+export { auth, database, storage };

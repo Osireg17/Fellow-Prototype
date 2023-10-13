@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   backArrowContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 80,
     left: 10,
   },
@@ -39,7 +39,7 @@ export const styles = StyleSheet.create({
   },
   loginButton: {
     width: "100%",
-    backgroundColor: '#282C35',
+    backgroundColor: "#282C35",
     borderRadius: 5,
     paddingVertical: 12,
     marginBottom: 30,
@@ -98,14 +98,14 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
   },
   registerTextContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 40,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   registerText: {
-    color: '#1E90FF',
+    color: "#1E90FF",
     fontSize: 16,
-    textDecorationLine: 'underline',
+    textDecorationLine: "underline",
   },
   errorText: {
     color: "red",

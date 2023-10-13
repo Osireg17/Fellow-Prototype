@@ -1,14 +1,3 @@
-import { View, ActivityIndicator } from 'react-native'
-import React, { useState, createContext, useContext, useEffect } from 'react'
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
-import { onAuthStateChanged } from 'firebase/auth'
-
-import Welcome_Screen from '../screens/Welcome_Screen'
-import SignUp from '../screens/Authentication/SignUp'
-import CreateProfile from '../screens/Authentication/CreateProfile'
-import Login from '../screens/Authentication/LogIn'
-import BiblePage from '../screens/Bible/BiblePage'
 import Home from '../screens/Home'
 import Questions from '../screens/Feeds/Questions'
 import ProfilePage from '../screens/Profile/ProfilePage'
@@ -18,17 +7,28 @@ import EditProfilePage from '../screens/Profile/EditProfilePage'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
 import { Ionicons, MaterialCommunityIcons, FontAwesome5, Octicons, FontAwesome } from '@expo/vector-icons'
-import OtherUserProfilePage from '../screens/Profile/OtherUserProfilePage'
-import CommentsPage from '../screens/Comment Pages/BiblePostCommentsPage'
-import QuestionPost from '../components/QuestionPost'
-import QuestionCommentsPage from '../screens/Comment Pages/QuestionCommentsPage'
-import EditPostPage from '../components/EditPostPage'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+import { onAuthStateChanged } from 'firebase/auth'
+import React, { useState, createContext, useContext, useEffect } from "react";
+import { View, ActivityIndicator } from "react-native";
+
 
 
 import { auth } from '../config/firebase'
 import ForgotPassword from '../screens/Authentication/ForgotPassword'
 import BiblePost from '../components/BiblePost'
-import Search from '../screens/Feeds/Search'
+import EditPostPage from '../components/EditPostPage'
+import QuestionPost from "../components/QuestionPost";
+import CreateProfile from '../screens/Authentication/CreateProfile'
+import Login from '../screens/Authentication/LogIn'
+import SignUp from "../screens/Authentication/SignUp";
+import BiblePage from '../screens/Bible/BiblePage'
+import CommentsPage from "../screens/Comment Pages/BiblePostCommentsPage";
+import QuestionCommentsPage from "../screens/Comment Pages/QuestionCommentsPage";
+import Search from "../screens/Feeds/Search";
+import OtherUserProfilePage from "../screens/Profile/OtherUserProfilePage";
+import Welcome_Screen from "../screens/Welcome_Screen";
 
 const AuthenticatedUserContext = createContext({});
 
@@ -56,8 +56,7 @@ function QuestionStackNavigator() {
 
 function CustomDrawerContent(props) {
   return (
-    <DrawerContentScrollView {...props}
-    >
+    <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
     </DrawerContentScrollView>
   );
@@ -74,8 +73,6 @@ function ProfileStackNavigator() {
   );
 }
 
-
-
 // create a drawer navigator for the profile page
 function ProfileDrawer() {
   return (
@@ -87,11 +84,11 @@ function ProfileDrawer() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
-        drawerPosition: 'right',
+        drawerPosition: "right",
         drawerStyle: {
-          backgroundColor: '#ffffff',
+          backgroundColor: "#ffffff",
           width: 240,
-          drawerPosition: 'right',
+          drawerPosition: "right",
         },
         // remove the ablility to swipe to open the drawer
         swipeEnabled: false,
@@ -103,21 +100,19 @@ function ProfileDrawer() {
   );
 }
 
-
 function Feeds() {
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: '#000000',
-        tabBarInactiveTintColor: '#000000',
+        tabBarActiveTintColor: "#000000",
+        tabBarInactiveTintColor: "#000000",
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: '#ffffff',
-          position: 'absolute',
+          backgroundColor: "#ffffff",
+          position: "absolute",
           height: 75,
           paddingTop: 20,
-          
         },
       }}
     >
@@ -125,7 +120,9 @@ function Feeds() {
         name="Home"
         component={Home}
         options={{
-          tabBarIcon: ({ color }) => <Octicons name="home" size={20} color={color} />,
+          tabBarIcon: ({ color }) => (
+            <Octicons name="home" size={20} color={color} />
+          ),
           headerShown: false,
         }}
       />
@@ -134,7 +131,11 @@ function Feeds() {
         component={QuestionStackNavigator}
         options={{
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="comment-question-outline" size={20} color={color} />
+            <MaterialCommunityIcons
+              name="comment-question-outline"
+              size={20}
+              color={color}
+            />
           ),
           headerShown: false,
         }}
@@ -143,16 +144,21 @@ function Feeds() {
         name="Bible"
         component={BibleStackNavigator}
         options={{
-        tabBarIcon: ({ color }) => <FontAwesome5 name="bible" size={20} color={color} />,
-        headerShown: false,
-        }}/>
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5 name="bible" size={20} color={color} />
+          ),
+          headerShown: false,
+        }}
+      />
       <Tab.Screen
-      name="Activity"
-      component={Activity}
-      options={{
-        tabBarIcon: ({ color }) => <FontAwesome name="bell-o" size={20} color={color}/>,
-        headerShown: false,
-      }}
+        name="Activity"
+        component={Activity}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="bell-o" size={20} color={color} />
+          ),
+          headerShown: false,
+        }}
       />
       <Tab.Screen
         name="Profile"
@@ -168,7 +174,7 @@ function Feeds() {
   );
 }
 
-const AuthenticatedUserProvider = ({children}) => {
+const AuthenticatedUserProvider = ({ children }) => {
   const [authenticatedUser, setAuthenticatedUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -182,8 +188,16 @@ const AuthenticatedUserProvider = ({children}) => {
   }, []);
 
   return (
-    <AuthenticatedUserContext.Provider value={{authenticatedUser, setAuthenticatedUser}}>
-      {loading ? <View><ActivityIndicator/></View> : children}
+    <AuthenticatedUserContext.Provider
+      value={{ authenticatedUser, setAuthenticatedUser }}
+    >
+      {loading ? (
+        <View>
+          <ActivityIndicator />
+        </View>
+      ) : (
+        children
+      )}
     </AuthenticatedUserContext.Provider>
   );
 };
@@ -200,37 +214,37 @@ const MainStack = () => {
           <Stack.Screen
             name="Feeds"
             component={ProfileDrawer}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="EditProfilePage"
             component={EditProfilePage}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="OtherUserProfilePage"
             component={OtherUserProfilePage}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="CommentsPage"
             component={CommentsPage}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="QuestionCommentsPage"
             component={QuestionCommentsPage}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
-            name='EditPostPage'
+            name="EditPostPage"
             component={EditPostPage}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
-            name='SearchPage'
+            name="SearchPage"
             component={Search}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
         </>
       ) : (
@@ -238,34 +252,33 @@ const MainStack = () => {
           <Stack.Screen
             name="Welcome"
             component={Welcome_Screen}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="SignUp"
             component={SignUp}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="Login"
             component={Login}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="ForgotPassword"
             component={ForgotPassword}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="CreateProfile"
             component={CreateProfile}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
         </>
       )}
     </Stack.Navigator>
   );
 };
-
 
 export default function App() {
   return (
