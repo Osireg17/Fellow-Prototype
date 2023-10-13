@@ -1,33 +1,41 @@
-import Home from '../screens/Home'
-import Questions from '../screens/Feeds/Questions'
-import ProfilePage from '../screens/Profile/ProfilePage'
-import Activity from '../screens/Feeds/Activity'
-import Settings from '../screens/Profile/Settings'
-import EditProfilePage from '../screens/Profile/EditProfilePage'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
-import { Ionicons, MaterialCommunityIcons, FontAwesome5, Octicons, FontAwesome } from '@expo/vector-icons'
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
-import { onAuthStateChanged } from 'firebase/auth'
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  FontAwesome5,
+  Octicons,
+  FontAwesome,
+} from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+} from "@react-navigation/drawer";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { onAuthStateChanged } from "firebase/auth";
 import React, { useState, createContext, useContext, useEffect } from "react";
 import { View, ActivityIndicator } from "react-native";
 
-
-
-import { auth } from '../config/firebase'
-import ForgotPassword from '../screens/Authentication/ForgotPassword'
-import BiblePost from '../components/BiblePost'
-import EditPostPage from '../components/EditPostPage'
+import BiblePost from "../components/BiblePost";
+import EditPostPage from "../components/EditPostPage";
 import QuestionPost from "../components/QuestionPost";
-import CreateProfile from '../screens/Authentication/CreateProfile'
-import Login from '../screens/Authentication/LogIn'
+import { auth } from "../config/firebase";
+import CreateProfile from "../screens/Authentication/CreateProfile";
+import ForgotPassword from "../screens/Authentication/ForgotPassword";
+import Login from "../screens/Authentication/LogIn";
 import SignUp from "../screens/Authentication/SignUp";
-import BiblePage from '../screens/Bible/BiblePage'
+import BiblePage from "../screens/Bible/BiblePage";
 import CommentsPage from "../screens/Comment Pages/BiblePostCommentsPage";
 import QuestionCommentsPage from "../screens/Comment Pages/QuestionCommentsPage";
+import Activity from "../screens/Feeds/Activity";
+import Questions from "../screens/Feeds/Questions";
 import Search from "../screens/Feeds/Search";
+import Home from "../screens/Home";
+import EditProfilePage from "../screens/Profile/EditProfilePage";
 import OtherUserProfilePage from "../screens/Profile/OtherUserProfilePage";
+import ProfilePage from "../screens/Profile/ProfilePage";
+import Settings from "../screens/Profile/Settings";
 import Welcome_Screen from "../screens/Welcome_Screen";
 
 const AuthenticatedUserContext = createContext({});

@@ -62,7 +62,7 @@ const BiblePageBottomSheet = forwardRef<Ref, Props>(
         </View>
       </BottomSheet>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({
