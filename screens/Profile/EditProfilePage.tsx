@@ -1,12 +1,11 @@
-import { Text, View, TextInput, TouchableOpacity, Image, Platform, Alert, KeyboardAvoidingView, ActionSheetIOS } from 'react-native';
-import React, { useState, useEffect } from 'react'
-import styles from '../../styles/Profile/EditProfilePage.style'
+import { Text, View, TextInput, TouchableOpacity, Platform, Alert, KeyboardAvoidingView, ActionSheetIOS } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import styles from '../../styles/Profile/EditProfilePage.style';
 import { Header as HeaderRNE, Avatar } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { database } from '../../config/firebase';
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { FontAwesome, Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from 'expo-image-picker';
 

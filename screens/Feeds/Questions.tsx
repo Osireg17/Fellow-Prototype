@@ -1,20 +1,21 @@
 import { Text, View, TouchableOpacity, Image, FlatList } from 'react-native';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import styles from '../../styles/Feeds/Questions.style';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Header as HeaderRNE } from 'react-native-elements';
-import { Feather, Ionicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 import { database } from '../../config/firebase';
 import { arrayUnion, arrayRemove, updateDoc, collection, onSnapshot, doc, getDoc, getDocs } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { FontAwesome5 } from '@expo/vector-icons';
+import { Card } from 'react-native-ui-lib';
 
 
 type UID = string;
 type PictureURL = string;
 type Question = any; // replace any with the type definition for a Question
 type Navigation = any; // replace any with the type definition for Navigation
-type Post = any; 
+type Post = any;
 
 async function fetchProfilePicture(uid: UID): Promise<PictureURL> {
   try {
@@ -33,18 +34,19 @@ async function fetchProfilePicture(uid: UID): Promise<PictureURL> {
   }
 }
 
-function QuestionHeader({ navigation: Navigation }: { navigation: Navigation}) {
+function QuestionHeader({ navigation: Navigation }: { navigation: Navigation }) {
   const [profilePicture, setProfilePicture] = useState('');
 
   const auth = getAuth();
   const uid = auth.currentUser?.uid;
 
   useEffect(() => {
-    fetchProfilePicture(uid).then((pictureUrl) => {
-      console.log('Profile picture URL:', pictureUrl);
-      setProfilePicture(pictureUrl);
-
-    });
+    if (uid) {
+      fetchProfilePicture(uid).then((pictureUrl) => {
+        console.log('Profile picture URL:', pictureUrl);
+        setProfilePicture(pictureUrl);
+      });
+    }
   }, [uid]);
 
   const NavigateToProfile = () => {
@@ -76,9 +78,15 @@ function QuestionHeader({ navigation: Navigation }: { navigation: Navigation}) {
 
 export default function Questions({ navigation: Navigation }: { navigation: Navigation }) {
   const [questions, setQuestions] = useState([]);
+  const [showFullTitle, setShowFullTitle] = useState(false);
+  
+
+  const toggleTitle = () => {
+    setShowFullTitle(!showFullTitle);
+  };
 
   const auth = getAuth();
-  const uid = auth.currentUser.uid;
+  const uid = auth.currentUser?.uid;
 
   useEffect(() => {
     const questionsCollection = collection(database, "questions");
@@ -108,14 +116,14 @@ export default function Questions({ navigation: Navigation }: { navigation: Navi
     const fetchComments = async () => {
       // Get a reference to the comments subcollection
       const commentsRef = collection(database, "questions", post.id, 'comments');
-    
+
       // Fetch the comments
       const querySnapshot = await getDocs(commentsRef);
-    
+
       // Update the state with the new comments
       setComments(querySnapshot.docs.map(doc => doc.data()));
     };
-    
+
 
     const handleLikePress = async () => {
       if (!liked) {
@@ -137,11 +145,11 @@ export default function Questions({ navigation: Navigation }: { navigation: Navi
 
     useEffect(() => {
       fetchComments();
-    
+
       setLiked((post.praises || []).includes(uid));
       setPraises(post.praises || []);
     }, [post]);
-    
+
 
     const onCommentClick = () => {
       Navigation.navigate('QuestionCommentsPage', { post: post, uid: uid, postId: post.id });
@@ -184,15 +192,8 @@ export default function Questions({ navigation: Navigation }: { navigation: Navi
     }
   }
 
-
-
   return (
-    <SafeAreaProvider
-      style={{
-        backgroundColor: '#FBF8F8',
-      }}
-
-    >
+    <SafeAreaProvider style={{ backgroundColor: '#FBF8F8' }}>
       <QuestionHeader navigation={Navigation} />
       <View style={[styles.scene, { backgroundColor: '#FBF8F8' }]}>
         <FlatList
@@ -201,13 +202,15 @@ export default function Questions({ navigation: Navigation }: { navigation: Navi
           renderItem={({ item, index }) => {
             const createdAt = item.createdAt ? item.createdAt.toDate().toLocaleString() : '';
             return (
-              <View style={styles.postContainer}>
+              <Card key={index} containerStyle={styles.postContainer}>
                 <View style={styles.postHeader}>
-                  <Text style={styles.postTitle}>{item.Title}</Text>
+                  <TouchableOpacity onPress={toggleTitle}>
+                    <Text style={styles.postTitle} numberOfLines={showFullTitle ? undefined : 1} ellipsizeMode='tail'>
+                      {showFullTitle || item.Title.length <= 30 ? item.Title : `${item.Title.substring(0, 20)}...`}
+                    </Text>
+                  </TouchableOpacity>
                   <View style={styles.postUser}>
-                    <TouchableOpacity
-                      onPress={() => navigateToOtherProfile(item, uid)}
-                    >
+                    <TouchableOpacity onPress={() => navigateToOtherProfile(item, uid)}>
                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         {item.type === "public" ? (
                           <>
@@ -226,17 +229,14 @@ export default function Questions({ navigation: Navigation }: { navigation: Navi
                   <Text style={styles.postTimestamp}>{createdAt}</Text>
                   <PostStats post={item} uid={uid} />
                 </View>
-              </View>
+              </Card>
             );
           }}
         />
       </View>
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={NavigateToPostQuestion}
-      >
+      <TouchableOpacity style={styles.fab} onPress={NavigateToPostQuestion}>
         <Ionicons name="md-create" size={25} color="white" />
       </TouchableOpacity>
     </SafeAreaProvider>
-  )
+  );
 }

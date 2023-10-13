@@ -12,6 +12,7 @@ import { DrawerActions } from '@react-navigation/native';
 import { TabView, TabBar } from 'react-native-tab-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
+import { Card } from 'react-native-ui-lib';
 
 function ProfileHeader({ navigation }) {
   const openMenu = () => {

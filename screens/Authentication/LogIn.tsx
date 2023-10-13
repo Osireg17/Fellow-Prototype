@@ -15,6 +15,7 @@ import { signInWithEmailAndPassword, OAuthProvider, signInWithCredential,  } fro
 import { auth } from "../../config/firebase";
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { styles } from "../../styles/Authentication/LogIn.style";
+import { Button } from "react-native-ui-lib";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -115,15 +116,7 @@ export default function Login({ navigation }) {
               >
                 <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.loginButton} onPress={onHandleLogin}>
-                <Text style={styles.loginButtonText}>Log In</Text>
-              </TouchableOpacity>
-              {/* <AppleAuthentication.AppleAuthenticationButton
-                buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-                buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-                style={styles.appleButton}
-                onPress={loginWithApple}
-              /> */}
+              <Button style={styles.loginButton} label="Login" onPress={onHandleLogin} />
             </View>
             <TouchableOpacity
               style={styles.registerTextContainer}

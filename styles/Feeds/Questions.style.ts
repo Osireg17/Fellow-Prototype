@@ -3,69 +3,80 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   scene: {
     flex: 1,
+    backgroundColor: '#F6F6F6',
+    paddingHorizontal: 12,
+    paddingVertical: 16,
   },
-  postTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'left',
-    marginBottom: 10,
-  },
-  postUserOpinion: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  postTimestamp: {
-    fontSize: 14,
-    color: '#888',
-    marginBottom: 10,
-  },
-  postStats: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: 'space-between',
-  },
-  iconContainer: {
-    flexDirection: "row",
-    marginRight: 10,
-  },
-  icon: {
-    marginRight: 5,
-  },
-  postStatsText: {
-    marginLeft: 5,
+  postContainer: {
+    backgroundColor: '#FFFFFF',
+    padding: 16,
+    marginBottom: 16,
+    borderRadius: 12,
+    elevation: 3,
   },
   postHeader: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
   },
   postUser: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+  postUsername: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    marginRight: 8,
+  },
   postUserImage: {
     width: 30,
     height: 30,
     borderRadius: 20,
-    marginRight: 10,
   },
-  postUsername: {
-    fontSize: 16,
+  postTitle: {
+    fontSize: 14,
     fontWeight: 'bold',
-    marginRight: 10,
+    color: '#333',
+    marginBottom: 12,
+  },
+  postUserOpinion: {
+    fontSize: 16,
+    color: '#444',
+    marginBottom: 12,
+  },
+  postTimestamp: {
+    fontSize: 12,
+    color: '#999',
+    marginBottom: 12,
+  },
+  postStats: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  icon: {
+    marginRight: 8,
+  },
+  postStatsText: {
+    marginLeft: 8,
   },
   fab: {
-    position: 'absolute', 
-    width: 56, 
-    height: 56, 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    right: 20, 
-    bottom: 120, 
-    backgroundColor: '#282C35', 
-    borderRadius: 30, 
-    elevation: 8
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 20,
+    bottom: 90,
+    backgroundColor: '#FF4500',
+    borderRadius: 30,
+    elevation: 10,
   },
   profileImageContainer: {
     marginLeft: 15,
@@ -113,19 +124,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginLeft: -20,
     marginTop: 5,
-  },
-  postContainer: {
-    backgroundColor: 'white',
-    padding: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4,
-    width: '100%',
   },
   postFooterIcons: {
   flexDirection: "row",

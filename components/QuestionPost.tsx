@@ -59,6 +59,11 @@ function QuestionPost({navigation}) {
         text: 'OK',
       }]);
       return;
+    } else if (Title.length > 40) {
+      Alert.alert('Error', 'Title must be less than 40 characters', [{
+        text: 'OK',
+      }]);
+      return;
     }
 
     try {
