@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  container: {
+    container: {
     flex: 1,
     marginBottom: 70,
   },
@@ -19,108 +19,82 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  profileImageContainer: {
-    marginLeft: 15,
-    backgroundColor: "transparent",
+  scene: {
+    flex: 1,
+    marginHorizontal: 5,
   },
-  profileImage: {
+  postContainer: {
+    backgroundColor: '#fff',
+    padding: 20,
+    marginVertical: 15,
+    borderRadius: 15,
+    shadowColor: '#ccc',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  postHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 15,
+  },
+  postUser: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  postUsername: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#333',
+    marginRight: 10,
+  },
+  postUserImage: {
     width: 40,
     height: 40,
     borderRadius: 20,
   },
-  scene: {
-    flex: 1,
-    marginHorizontal: 5,
-
-  },
-  indicator: {
-    backgroundColor: 'black',
-  },
-  tabBar: {
-    backgroundColor: 'white',
-    paddingTop: 10
-  },
-  label: {
-    color: 'black',
-    fontWeight: 'bold',
-  },
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 5,
-    backgroundColor: '#FFFFFF',
-  },
-  picker: {
-    width: 150,
-    height: 40,
-  },
-  dropdownContainer: {
-    position: 'absolute',
-    zIndex: 9999,
-    top: 0,
-    left: 10,
-    borderColor: "transparent"
-  },
-  searchBar: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#CCCCCC',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    width: '110%',
-    marginRight: 10,
-    marginLeft: -20,
-    height: 20,
-  },
-  postContainer: {
-    backgroundColor: 'white',
-    padding: 10,
-    
-    shadowColor: '#000',
-  shadowOffset: {
-    width: 0,
-    height: 2,
-  },
-  shadowOpacity: 0.23,
-  shadowRadius: 2.62,
-  elevation: 4,
-  },
   postTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'left',
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#333',
+    marginBottom: 10,
+  },
+  postTimestamp: {
+    fontSize: 11,
+    color: '#aaa',
+    marginBottom: 10,
+  },
+  postBibleInformation: {
+    backgroundColor: '#f2f2f2',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 15,
+  },
+  postBibleText: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 5,
+  },
+  postBibleReference: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#444',
     marginBottom: 10,
   },
   postUserOpinion: {
     fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  postTimestamp: {
-    fontSize: 14,
-    color: '#888',
-    marginBottom: 10,
-  },
-  postBibleInformation: {
-    padding: 10,
-    backgroundColor: '#f8f8f8',
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  postBibleText: {
-    fontSize: 14,
-    marginBottom: 5,
-  },
-  
-  postBibleReference: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    fontStyle: 'italic',
-    marginBottom: 5,
+    fontWeight: '500',
+    color: '#444',
+    lineHeight: 24,
+    marginBottom: 15,
   },
   postStats: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
   },
   iconContainer: {
@@ -133,26 +107,6 @@ export default StyleSheet.create({
   postStatsText: {
     marginLeft: 5,
   },
-  postHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  postUser: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  postUserImage: {
-    width: 30,
-    height: 30,
-    borderRadius: 20,
-    marginRight: 10,
-  },
-  postUsername: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginRight: 10,
-  },
   searchIconContainer: {
     position: 'absolute',
     top: 10,
@@ -162,5 +116,15 @@ export default StyleSheet.create({
   searchIcon: {
     color: '#888',
   },
-  
+    indicator: {
+    backgroundColor: 'black',
+  },
+  tabBar: {
+    backgroundColor: 'white',
+    paddingTop: 10
+  },
+  label: {
+    color: 'black',
+    fontWeight: 'bold',
+  },
 });

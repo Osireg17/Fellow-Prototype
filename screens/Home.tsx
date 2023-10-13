@@ -1,14 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TouchableOpacity,
   Image,
-  Text,
-  SafeAreaView,
-  ScrollView,
+  Text, ScrollView,
   FlatList,
-  Dimensions,
-
+  Dimensions
 } from 'react-native';
 import { Header as HeaderRNE } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -17,9 +14,10 @@ import { TabView, TabBar } from 'react-native-tab-view';
 import { database } from '../config/firebase';
 import { doc, getDoc, collection, getDocs, onSnapshot, query, updateDoc, arrayUnion, arrayRemove, where, orderBy } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import styles from "../styles/Home.style"
+import styles from "../styles/Home.style";
 import DropDownPicker from 'react-native-dropdown-picker';
 import RenderHTML from 'react-native-render-html';
+import { Card } from 'react-native-ui-lib';
 
 
 
@@ -125,10 +123,10 @@ const PostStats = ({ post, uid, onPraiseUpdate, onCommentClick, postType }) => {
   const fetchComments = async () => {
     // Get a reference to the comments subcollection
     const commentsRef = collection(database, postType, post.postId, 'comments');
-  
+
     // Fetch the comments
     const querySnapshot = await getDocs(commentsRef);
-  
+
     // Update the state with the new comments
     setComments(querySnapshot.docs.map(doc => doc.data()));
   };
@@ -178,7 +176,7 @@ const PostStats = ({ post, uid, onPraiseUpdate, onCommentClick, postType }) => {
 
   useEffect(() => {
     fetchComments();
-  
+
     setLiked(post.praises.includes(uid));
     setPraises(post.praises);
   }, [post]);
@@ -262,6 +260,16 @@ export default function MainFeed({ navigation }) {
 
   const [selectedValue, setSelectedValue] = useState("home");
 
+  const [readMoreState, setReadMoreState] = useState({}); // For tracking read more state
+
+  const toggleReadMore = (index) => {
+    setReadMoreState({
+      ...readMoreState,
+      [index]: !readMoreState[index],
+    });
+  };
+
+
   const FirstRoute = ({ publicPosts }) => (
     <View style={[styles.scene, { backgroundColor: '#FBF8F8' }]}>
       <FlatList
@@ -269,8 +277,9 @@ export default function MainFeed({ navigation }) {
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => {
           const createdAt = item.createdAt ? item.createdAt.toDate().toLocaleString() : '';
+          const isReadMore = readMoreState[index];
           return (
-            <View style={styles.postContainer}>
+            <Card key={index} containerStyle={styles.postContainer}>
               <View style={styles.postHeader}>
                 <Text style={styles.postTitle}>{item.Title}</Text>
                 <View style={styles.postUser}>
@@ -299,18 +308,28 @@ export default function MainFeed({ navigation }) {
                     <Text style={styles.postBibleReference}>
                       {info.BibleBook} {info.BibleChapter}:{info.BibleVerse}
                     </Text>
-                    <Text style={styles.postBibleText}>
-                      "
-                      <RenderHTML
-                        contentWidth={Dimensions.get('window').width}
-                        source={{ html: info.BibleText }}
-                      />
-                      "
-                    </Text>
+                    <RenderHTML
+                      contentWidth={Dimensions.get('window').width}
+                      source={{ html: info.BibleText }}
+                    />
                   </View>
                 );
               })}
-              <Text style={styles.postUserOpinion}>{item.Content}</Text>
+              <View>
+                <Text
+                  style={styles.postUserOpinion}
+                  numberOfLines={isReadMore ? undefined : 3}
+                >
+                  {item.Content}
+                </Text>
+                {item.Content.length > 200 && (
+                  <TouchableOpacity onPress={() => toggleReadMore(index)}>
+                    <Text style={{ color: 'black' }}>
+                      {isReadMore ? 'Read Less' : 'Read More'}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
               <Text style={styles.postTimestamp}>{createdAt}</Text>
               <PostStats
                 uid={uid}
@@ -324,7 +343,7 @@ export default function MainFeed({ navigation }) {
                 }}
                 postType={'public'}
               />
-            </View>
+            </Card>
           );
         }}
       />
@@ -337,8 +356,9 @@ export default function MainFeed({ navigation }) {
       <ScrollView>
         {privatePosts.map((post, index) => {
           const createdAt = post.createdAt ? post.createdAt.toDate().toLocaleString() : '';
+          const isReadMore = readMoreState[index];
           return (
-            <View key={index} style={styles.postContainer}>
+            <Card key={index} containerStyle={styles.postContainer}>
               <View style={styles.postHeader}>
                 <Text style={styles.postTitle}>{post.Title}</Text>
                 <View style={styles.postUser}>
@@ -361,24 +381,38 @@ export default function MainFeed({ navigation }) {
                   </TouchableOpacity>
                 </View>
               </View>
-              {post.BibleInformation.map((info, infoIndex) => {
-                return (
-                  <View key={infoIndex} style={styles.postBibleInformation}>
-                    <Text style={styles.postBibleReference}>
-                      {info.BibleBook} {info.BibleChapter}:{info.BibleVerse}
+
+              {post.BibleInformation.map((info, infoIndex) => (
+                <View key={infoIndex} style={styles.postBibleInformation}>
+                  <Text style={styles.postBibleReference}>
+                    {info.BibleBook} {info.BibleChapter}:{info.BibleVerse}
+                  </Text>
+                  <RenderHTML
+                    contentWidth={Dimensions.get('window').width}
+                    source={{ html: info.BibleText }}
+                  />
+                </View>
+              ))}
+
+
+              <View>
+                <Text
+                  style={styles.postUserOpinion}
+                  numberOfLines={isReadMore ? undefined : 3}
+                >
+                  {post.Content}
+                </Text>
+                {post.Content.length > 200 && (
+                  <TouchableOpacity onPress={() => toggleReadMore(index)}>
+                    <Text style={{ color: 'black' }}>
+                      {isReadMore ? 'Read Less' : 'Read More'}
                     </Text>
-                    <Text style={styles.postBibleText}>
-                      {/* the text is html */}
-                      <RenderHTML
-                        contentWidth={Dimensions.get('window').width}
-                        source={{ html: info.BibleText }}
-                      />
-                    </Text>
-                  </View>
-                );
-              })}
-              <Text style={styles.postUserOpinion}>{post.Content}</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
               <Text style={styles.postTimestamp}>{createdAt}</Text>
+
+
               <PostStats
                 uid={uid}
                 post={post}
@@ -391,7 +425,7 @@ export default function MainFeed({ navigation }) {
                 }}
                 postType={'private'}
               />
-            </View>
+            </Card>
           );
         })}
       </ScrollView>

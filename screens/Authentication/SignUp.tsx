@@ -13,6 +13,7 @@ import {
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import {styles} from '../../styles/Authentication/SignUp.style';
+import { Button } from 'react-native-ui-lib';
 
 export default function SignUp({navigation}) {
     const [email, setEmail] = useState("");
@@ -163,9 +164,7 @@ export default function SignUp({navigation}) {
                   Password must be at least 8 characters long and contain numbers and special characters.
                 </Text>
               )}
-              <TouchableOpacity style={styles.signUpButton} onPress={onHandleSignUp}>
-                <Text style={styles.signUpButtonText}>Sign Up</Text>
-              </TouchableOpacity>
+              <Button style={styles.signUpButton} label="Sign Up" onPress={onHandleSignUp} />
             </View>
             <TouchableOpacity
               style={styles.registerTextContainer}

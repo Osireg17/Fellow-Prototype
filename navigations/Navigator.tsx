@@ -1,7 +1,7 @@
-import {View, ActivityIndicator} from 'react-native'
-import React,{useState, createContext, useContext, useEffect} from 'react'
-import {NavigationContainer} from '@react-navigation/native'
-import {createStackNavigator} from '@react-navigation/stack'
+import { View, ActivityIndicator } from 'react-native'
+import React, { useState, createContext, useContext, useEffect } from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 import { onAuthStateChanged } from 'firebase/auth'
 
 import Welcome_Screen from '../screens/Welcome_Screen'
@@ -9,23 +9,20 @@ import SignUp from '../screens/Authentication/SignUp'
 import CreateProfile from '../screens/Authentication/CreateProfile'
 import Login from '../screens/Authentication/LogIn'
 import BiblePage from '../screens/Bible/BiblePage'
-import Home from '../screens/Home';
-import Questions from '../screens/Feeds/Questions';
-import ProfilePage from '../screens/Profile/ProfilePage';
+import Home from '../screens/Home'
+import Questions from '../screens/Feeds/Questions'
+import ProfilePage from '../screens/Profile/ProfilePage'
 import Activity from '../screens/Feeds/Activity'
 import Settings from '../screens/Profile/Settings'
 import EditProfilePage from '../screens/Profile/EditProfilePage'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList  } from '@react-navigation/drawer';
-import { AntDesign, Ionicons, MaterialCommunityIcons, FontAwesome5, Octicons, FontAwesome } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
+import { Ionicons, MaterialCommunityIcons, FontAwesome5, Octicons, FontAwesome } from '@expo/vector-icons'
 import OtherUserProfilePage from '../screens/Profile/OtherUserProfilePage'
 import CommentsPage from '../screens/Comment Pages/BiblePostCommentsPage'
 import QuestionPost from '../components/QuestionPost'
 import QuestionCommentsPage from '../screens/Comment Pages/QuestionCommentsPage'
 import EditPostPage from '../components/EditPostPage'
-import RepostPage from '../components/RepostPage'
-import { database } from '../config/firebase'
-import { doc, getDoc, collection, getDocs, onSnapshot, query, updateDoc, arrayUnion, arrayRemove, where, orderBy } from "firebase/firestore";
 
 
 import { auth } from '../config/firebase'

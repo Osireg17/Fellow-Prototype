@@ -67,102 +67,100 @@ value: {
     fontSize: 18,
     color: '#2C3E50',
 }, 
-  postContainer: {
-    width: '100%',
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-    padding: 10,
-  },
-  postHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  postUser: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  postTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 5,
-  },
-  postUsername: {
-    marginRight: 5,
-    fontWeight: 'bold',
-  },
-  postUserImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  postBibleInformation: {
-    marginTop: 10,
-    backgroundColor: '#f5f8fa',
-    padding: 10,
-    borderRadius: 10,
-  },
-  postBibleReference: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  postBibleText: {
-    fontSize: 14,
-    marginTop: 5,
-  },
-  postUserOpinion: {
-    fontSize: 15,
-    color: '#333',
-    lineHeight: 20,
-    marginTop: 10,
-  },
-  postTimestamp: {
-    fontSize: 12,
-    color: '#888',
-    marginTop: 15,
-  },
-  scene : {
-    flex: 1,
-  },
-  postUserQuestion: {
-    fontSize: 15,
-    color: '#333',
-    lineHeight: 20,
-    marginTop: 5,
-    backgroundColor: '#f5f8fa',
-    padding: 10,
-    borderRadius: 10,
-  },
-  postFooter: {
-    flexDirection: 'row', 
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  
-  praiseContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  
-  praiseCount: {
-    marginLeft: 5,
-    fontSize: 16,
-    color: '#000',
-  },
-  
-  commentButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  
-  commentCount: {
-    marginLeft: 5,
-    fontSize: 16,
-    color: '#000',
-  },
+postContainer: {
+  width: '100%',
+  backgroundColor: '#ffffff',
+  borderBottomWidth: 1,
+  borderBottomColor: '#E0E0E0', // Lighter border color
+  padding: 15, // Increased padding
+  marginBottom: 10, // Space between posts
+},
+postHeader: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: 12, // Little more margin-bottom
+},
+postUser: {
+  flexDirection: 'row',
+  alignItems: 'center',
+},
+postTitle: {
+  fontSize: 18,
+  fontWeight: '700',
+  color: '#333', // Darker text
+  marginBottom: 7, // Adjusted margin
+},
+postUsername: {
+  marginRight: 8,
+  fontWeight: '600', // Semi-bold
+  color: '#555', // Dark gray
+},
+postUserImage: {
+  width: 40,
+  height: 40,
+  borderRadius: 20,
+  marginRight: 10,
+},
+postBibleInformation: {
+  marginTop: 12,
+  backgroundColor: '#F2F4F6', // Light blue-gray background
+  padding: 12,
+  borderRadius: 12, // Rounded corners
+},
+postBibleReference: {
+  fontSize: 16,
+  fontWeight: '600', // Semi-bold
+},
+postBibleText: {
+  fontSize: 14,
+  marginTop: 8,
+  color: '#333', // Dark gray
+},
+postUserOpinion: {
+  fontSize: 16, // Slightly larger text
+  color: '#333',
+  lineHeight: 22, // Improved line height
+  marginTop: 12, // More margin
+},
+postTimestamp: {
+  fontSize: 12,
+  color: '#999', // Lighter gray
+  marginTop: 15,
+},
+postUserQuestion: {
+  fontSize: 16, // Increased size
+  color: '#333',
+  lineHeight: 22,
+  marginTop: 10,
+  backgroundColor: '#F2F4F6',
+  padding: 12,
+  borderRadius: 12, // Rounded corners
+},
+postFooter: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: 12, // Increased top margin
+},
+praiseContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+},
+praiseCount: {
+  marginLeft: 8, // Increased left margin
+  fontSize: 16,
+  color: '#333', // Dark gray
+},
+commentButton: {
+  flexDirection: 'row',
+  alignItems: 'center',
+},
+commentCount: {
+  marginLeft: 8, // Increased left margin
+  fontSize: 16,
+  color: '#333', // Dark gray
+},
   
 });
 
