@@ -14,7 +14,7 @@ export default function Welcome_Screen({ navigation }) {
   return (
     <ImageBackground source={bgImage} style={styles.imageBackground}>
       <View style={styles.welcomeContainer}>
-        <Text style={styles.welcomeTitle}>Welcome to Fellow</Text>
+        <Text className='text-5xl text-center text-white'>Welcome to Fellow</Text>
         <Button style={styles.button} label="Login"
           onPress={() => navigation.navigate('Login')}
         />
