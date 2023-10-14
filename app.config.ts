@@ -39,6 +39,8 @@ const defineConfig = (): ExpoConfig => ({
     },
   },
   plugins: [
+    "expo-router",
+    "@react-native-firebase/app",
     [
       "expo-build-properties",
       {
@@ -48,6 +50,10 @@ const defineConfig = (): ExpoConfig => ({
       },
     ],
   ],
+  experiments: {
+    tsconfigPaths: true,
+    typedRoutes: true,
+  },
   runtimeVersion: {
     policy: "sdkVersion",
   },

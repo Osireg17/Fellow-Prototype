@@ -1,6 +1,6 @@
 // BiblePageBottomSheet.tsx
 import BottomSheet from "@gorhom/bottom-sheet";
-import { useNavigation } from "@react-navigation/native";
+import { Link } from "expo-router";
 import React, { forwardRef, useRef, useImperativeHandle, useMemo } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
@@ -20,7 +20,6 @@ const BiblePageBottomSheet = forwardRef<Ref, Props>(
   ({ selectedColor, setSelectedColor, selectedVerses, onVersePress }, ref) => {
     const bottomSheetRef = useRef<BottomSheet>(null);
     const snapPoints = useMemo(() => ["10%", "45%"], []);
-    const navigation = useNavigation();
 
     useImperativeHandle(ref, () => ({
       expand: () => {
@@ -41,15 +40,17 @@ const BiblePageBottomSheet = forwardRef<Ref, Props>(
         enablePanDownToClose
       >
         <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              console.log(selectedVerses); // Add this line
-              navigation.navigate("BiblePost", { selectedVerses });
-            }}
-          >
-            <Text style={styles.buttonText}>Create a revelation</Text>
-          </TouchableOpacity>
+          <Link href="/comments">
+            <TouchableOpacity
+              style={styles.button}
+              // onPress={() => {
+              //   console.log(selectedVerses); // Add this line
+              //   navigation.navigate("BiblePost", { selectedVerses });
+              // }}
+            >
+              <Text style={styles.buttonText}>Create a revelation</Text>
+            </TouchableOpacity>
+          </Link>
           <View style={styles.colorContainer}>
             {colors.map((color, index) => (
               <TouchableOpacity
@@ -62,7 +63,7 @@ const BiblePageBottomSheet = forwardRef<Ref, Props>(
         </View>
       </BottomSheet>
     );
-  },
+  }
 );
 
 const styles = StyleSheet.create({
