@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import classNames from "classnames";
 import * as AppleAuthentication from "expo-apple-authentication";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
@@ -10,12 +11,10 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
 } from "react-native";
 import { Button } from "react-native-ui-lib";
 
 import { auth } from "../../config/firebase";
-import { styles } from "../../styles/Authentication/LogIn.style";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -77,62 +76,76 @@ export default function Login({ navigation }) {
   };
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      className="flex-1 bg-white justify-center px-4"
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 0}
     >
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.backArrowContainer}
-            onPress={() => navigation.goBack()}
-          >
-            <Ionicons name="arrow-back" size={24} color="black" />
-          </TouchableOpacity>
-          <View style={styles.loginWrapper}>
-            <Text style={styles.loginTitle}>Login</Text>
-            <TextInput
-              style={[styles.input, emailError ? styles.errorInput : null]}
-              placeholder="Email Address"
-              placeholderTextColor="#B0B0B0"
-              keyboardType="email-address"
-              onChangeText={(text) => setEmail(text)}
-              value={email}
-            />
-            {emailError && (
-              <Text style={styles.errorText}>Please enter your email.</Text>
+      <View className="flex-1 flex-col bg-white justify-center px-8">
+        <TouchableOpacity
+          className="absolute top-20 left-4"
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+        <View className="flex flex-col gap-8 items-center">
+          <Text className="text-2xl font-bold">Login</Text>
+          <TextInput
+            className={classNames(
+              "w-full px-3 py-2 rounded border-[#ccc] border",
+              {
+                "border-red-500": emailError,
+              }
             )}
-            <TextInput
-              style={[styles.input, passwordError ? styles.errorInput : null]}
-              placeholder="Password"
-              placeholderTextColor="#B0B0B0"
-              secureTextEntry
-              onChangeText={(text) => setPassword(text)}
-              value={password}
-            />
-            {passwordError && (
-              <Text style={styles.errorText}>Please enter your password.</Text>
+            placeholder="Email Address"
+            placeholderTextColor="#B0B0B0"
+            keyboardType="email-address"
+            onChangeText={(text) => setEmail(text)}
+            value={email}
+          />
+          {emailError && (
+            <Text className="text-red-500 text-sm self-start">
+              Please enter your email.
+            </Text>
+          )}
+          <TextInput
+            className={classNames(
+              "w-full px-3 py-2 rounded border-[#ccc] border",
+              {
+                "border-red-500": passwordError,
+              }
             )}
-            <TouchableOpacity
-              style={styles.forgotPasswordContainer}
-              onPress={() => navigation.navigate("ForgotPassword")}
-            >
-              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-            </TouchableOpacity>
-            <Button
-              style={styles.loginButton}
-              label="Login"
-              onPress={onHandleLogin}
-            />
-          </View>
+            placeholder="Password"
+            placeholderTextColor="#B0B0B0"
+            secureTextEntry
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+          />
+          {passwordError && (
+            <Text className="text-red-500 text-sm self-start">
+              Please enter your password.
+            </Text>
+          )}
           <TouchableOpacity
-            style={styles.registerTextContainer}
-            onPress={() => navigation.navigate("SignUp")}
+            className="items-center"
+            onPress={() => navigation.navigate("ForgotPassword")}
           >
-            <Text style={styles.registerText}>Register an account</Text>
+            <Text>Forgot Password?</Text>
           </TouchableOpacity>
+          <Button
+            className="bg-[#282C35] w-full rounded-md px-4 py-2 text-center"
+            label="Login"
+            onPress={onHandleLogin}
+          />
         </View>
-      </ScrollView>
+        <TouchableOpacity
+          className="pt-6 items-center"
+          onPress={() => navigation.navigate("SignUp")}
+        >
+          <Text className="text-blue-500 text-md underline">
+            Register an account
+          </Text>
+        </TouchableOpacity>
+      </View>
     </KeyboardAvoidingView>
   );
 }

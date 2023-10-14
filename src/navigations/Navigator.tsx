@@ -36,7 +36,7 @@ import EditProfilePage from "../screens/Profile/EditProfilePage";
 import OtherUserProfilePage from "../screens/Profile/OtherUserProfilePage";
 import ProfilePage from "../screens/Profile/ProfilePage";
 import Settings from "../screens/Profile/Settings";
-import Welcome_Screen from "../screens/Welcome_Screen";
+import Welcome from "../screens/WelcomeScreen";
 
 const AuthenticatedUserContext = createContext({});
 
@@ -259,7 +259,7 @@ const MainStack = () => {
         <>
           <Stack.Screen
             name="Welcome"
-            component={Welcome_Screen}
+            component={Welcome}
             options={{ headerShown: false }}
           />
           <Stack.Screen
