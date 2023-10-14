@@ -1,18 +1,5 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { getAuth } from "firebase/auth";
-import {
-  doc,
-  getDoc,
-  collection,
-  getDocs,
-  onSnapshot,
-  query,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
-  where,
-  orderBy,
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";

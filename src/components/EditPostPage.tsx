@@ -1,34 +1,16 @@
 import {
-  FontAwesome,
-  Feather,
   Ionicons,
-  MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { getAuth } from "firebase/auth";
 import {
   doc,
-  onSnapshot,
-  collection,
-  where,
-  query,
-  getDocs,
-  deleteDoc,
-  updateDoc,
   getDoc,
-  serverTimestamp,
 } from "firebase/firestore";
 import React, { useState, useEffect } from "react";
 import {
   Text,
-  View,
   TouchableOpacity,
-  Image,
-  FlatList,
-  Dimensions,
-  Alert,
   StyleSheet,
   TextInput,
-  Button,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";

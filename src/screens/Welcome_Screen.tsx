@@ -1,11 +1,12 @@
 import React from "react";
 import { ImageBackground } from "react-native";
-import { View, TextField, Text, Button } from "react-native-ui-lib";
+import { View, Text, Button } from "react-native-ui-lib";
 
+// import bgImage from "../../assets/images/LandingScreen.jpg";
 import styles from "../styles/Welcome_Screen.style";
 // import { Button, Text } from 'react-native-paper';
 
-const bgImage = require("../photos/LandingScreen.jpg");
+const bgImage = require("../../assets/images/LandingScreen.jpg");
 
 export default function Welcome_Screen({ navigation }) {
   return (

@@ -3,19 +3,11 @@ import {
   doc,
   getDoc,
   collection,
-  getDocs,
-  onSnapshot,
-  query,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
-  where,
-  orderBy,
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import uuid from "react-native-uuid";
 
 import { database } from "../config/firebase";

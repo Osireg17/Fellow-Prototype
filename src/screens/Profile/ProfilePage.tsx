@@ -30,7 +30,6 @@ import {
 } from "react-native-popup-menu";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { TabView, TabBar } from "react-native-tab-view";
-import { Card } from "react-native-ui-lib";
 
 import { database } from "../../config/firebase";
 import styles from "../../styles/Profile/profilePage.style";
@@ -95,7 +94,7 @@ function UserProfile() {
       },
       (error) => {
         console.log("Error fetching user's profile picture:", error);
-      },
+      }
     );
 
     return () => {
@@ -172,7 +171,7 @@ const PublicPostsRoute = ({ navigation }) => {
       for (const post of allPublicPosts) {
         const commentsQuery = collection(
           doc(database, "public", post.id),
-          "comments",
+          "comments"
         );
         const commentsSnapshot = await getDocs(commentsQuery);
         post.commentsCount = commentsSnapshot.size;
@@ -242,7 +241,7 @@ const PublicPostsRoute = ({ navigation }) => {
                             },
                             { text: "OK", onPress: () => deletePost(item.id) },
                           ],
-                          { cancelable: false },
+                          { cancelable: false }
                         );
                       }}
                     >
@@ -344,7 +343,7 @@ const PrivatePostsRoute = ({ navigation }) => {
       for (const post of allPrivatePosts) {
         const commentsQuery = collection(
           doc(database, "private", post.id),
-          "comments",
+          "comments"
         );
         const commentsSnapshot = await getDocs(commentsQuery);
         post.commentsCount = commentsSnapshot.size;
@@ -415,7 +414,7 @@ const PrivatePostsRoute = ({ navigation }) => {
                             },
                             { text: "OK", onPress: () => deletePost(item.id) },
                           ],
-                          { cancelable: false },
+                          { cancelable: false }
                         );
                       }}
                     >
@@ -517,7 +516,7 @@ const QuestionsRoute = ({ navigation }) => {
       for (const post of allQuestionPosts) {
         const commentsQuery = collection(
           doc(database, "questions", post.id),
-          "comments",
+          "comments"
         );
         const commentsSnapshot = await getDocs(commentsQuery);
         post.commentsCount = commentsSnapshot.size;
@@ -589,7 +588,7 @@ const QuestionsRoute = ({ navigation }) => {
                             },
                             { text: "OK", onPress: () => deletePost(item.id) },
                           ],
-                          { cancelable: false },
+                          { cancelable: false }
                         );
                       }}
                     >

@@ -1,13 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as AppleAuthentication from "expo-apple-authentication";
-import {
-  signInWithEmailAndPassword,
-  OAuthProvider,
-  signInWithCredential,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import {
-  StyleSheet,
   Text,
   View,
   TextInput,

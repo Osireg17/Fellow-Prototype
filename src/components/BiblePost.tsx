@@ -13,7 +13,6 @@ import {
   View,
   Text,
   TextInput,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
@@ -78,7 +77,7 @@ function BiblePost({ route, navigation }) {
         "Missing information",
         "Please fill out all fields.",
         [{ text: "OK" }],
-        { cancelable: false },
+        { cancelable: false }
       );
       return;
     }
@@ -88,7 +87,7 @@ function BiblePost({ route, navigation }) {
         "Profanity detected",
         "Please remove any profanity from your opinion.",
         [{ text: "OK" }],
-        { cancelable: false },
+        { cancelable: false }
       );
       // console.log the bad words
       console.log(filter.clean(Content));
@@ -100,7 +99,7 @@ function BiblePost({ route, navigation }) {
         "Title is too long",
         "Please shorten the title to 30 characters or less.",
         [{ text: "OK" }],
-        { cancelable: false },
+        { cancelable: false }
       );
       return;
     }
@@ -148,7 +147,7 @@ function BiblePost({ route, navigation }) {
         "Success!",
         "Your opinion has been posted.",
         [{ text: "OK", onPress: () => navigation.goBack() }],
-        { cancelable: false },
+        { cancelable: false }
       );
       navigation.goBack();
     } catch (error) {

@@ -1,37 +1,18 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import { getAuth } from "firebase/auth";
 import {
-  addDoc,
   collection,
   doc,
   setDoc,
   getDoc,
   serverTimestamp,
-  query,
-  orderBy,
-  getDocs,
-  limit,
-  startAfter,
-  onSnapshot,
-  deleteDoc,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
 } from "firebase/firestore";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  Pressable,
   SafeAreaView,
-  Modal,
-  ScrollView,
-  FlatList,
-  Dimensions,
-  ActivityIndicator,
   TextInput,
   KeyboardAvoidingView,
   Platform,

@@ -3,7 +3,7 @@ import { NativeWindStyleSheet } from "nativewind";
 import { MenuProvider } from "react-native-popup-menu";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import RootNavigator from "./navigations/Navigator";
+import RootNavigator from "./src/navigations/Navigator";
 
 import "react-native-gesture-handler";
 

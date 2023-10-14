@@ -1,44 +1,58 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import Filter from "bad-words";
 import { getAuth } from "firebase/auth";
 import {
   doc,
   getDoc,
   collection,
-  getDocs,
   onSnapshot,
   query,
   updateDoc,
   arrayUnion,
   arrayRemove,
-  where,
-  orderBy,
   serverTimestamp,
   addDoc,
-  increment,
 } from "firebase/firestore";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
-  Image,
   TextInput,
+  TouchableOpacity,
+  Image,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { database } from "../config/firebase";
+import { unGodlyWords } from "../config/unGodlyWords";
 
-const QuestionComments = ({ postId }) => {
+const Comments = ({ postId, postType }) => {
+  const navigation = useNavigation();
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState([]);
+  const [likes, setLikes] = useState([]);
 
   const auth = getAuth();
   const user = auth.currentUser;
   const uid = user?.uid; // Get the user's id
 
   const handlePostComment = async () => {
+    const filter = new Filter({ list: unGodlyWords });
+
+    if (commentText === "") {
+      alert("Please enter a comment");
+      return;
+    } else if (commentText.length > 200) {
+      alert("Please limit your comment to 200 characters");
+      return;
+    } else if (filter.isProfane(commentText)) {
+      alert("Please refrain from using profanity.");
+      return;
+    }
+
     // create a collection of comments for each post. Store the post ID in the comment document, so you can query for all comments for a post
     const auth = getAuth();
     const user = auth.currentUser;
@@ -61,17 +75,17 @@ const QuestionComments = ({ postId }) => {
       username,
       userProfilePicture,
       likes: [],
-      likesCount: 0,
     };
 
-    const commentRef = collection(database, "questions", postId, "comments");
+    const commentRef = collection(database, postType, postId, "comments");
     addDoc(commentRef, comment);
     setCommentText("");
   };
 
   useEffect(() => {
+    // Adjust collection path to include postType
     const commentsQuery = query(
-      collection(database, "questions", postId, "comments"),
+      collection(database, postType, postId, "comments")
     );
     const unsubscribe = onSnapshot(commentsQuery, (snapshot) => {
       const comments = snapshot.docs.map((doc) => ({
@@ -81,49 +95,48 @@ const QuestionComments = ({ postId }) => {
       setComments(comments);
     });
     return unsubscribe;
-  }, [postId]);
+  }, [postId, postType]);
+
+  const [isLiked, setIsLiked] = useState(false);
 
   const handleLike = async (comment) => {
     const auth = getAuth();
     const user = auth.currentUser;
     const uid = user.uid;
 
-    const commentRef = doc(
-      database,
-      "questions",
-      postId,
-      "comments",
-      comment.id,
-    );
+    const commentRef = doc(database, postType, postId, "comments", comment.id);
 
+    // Check if the user has already liked the comment
     const isLiked = comment.likes.includes(uid);
 
     if (!isLiked) {
+      // If the user has not already liked the comment, add their uid to the "likes" array
       await updateDoc(commentRef, {
         likes: arrayUnion(uid),
-        likesCount: increment(1),
-      }).then(() => {
-        setComments((prevComments) =>
-          prevComments.map((item) => {
-            return item.id === comment.id
-              ? { ...item, likes: [...item.likes, uid] }
-              : item;
-          }),
-        );
+        likesCount: comment.likes.length + 1,
       });
+      // Update the local state
+      setComments((prevComments) =>
+        prevComments.map((item) =>
+          item.id === comment.id
+            ? { ...item, likes: [...item.likes, uid] }
+            : item
+        )
+      );
     } else {
+      // If the user has already liked the comment, remove their uid from the "likes" array
       await updateDoc(commentRef, {
         likes: arrayRemove(uid),
-        likesCount: increment(-1),
-      }).then(() => {
-        setComments((prevComments) =>
-          prevComments.map((item) => {
-            return item.id === comment.id
-              ? { ...item, likes: item.likes.filter((like) => like !== uid) }
-              : item;
-          }),
-        );
+        likesCount: comment.likes.length - 1,
       });
+      // Update the local state
+      setComments((prevComments) =>
+        prevComments.map((item) =>
+          item.id === comment.id
+            ? { ...item, likes: item.likes.filter((like) => like !== uid) }
+            : item
+        )
+      );
     }
   };
 
@@ -137,6 +150,8 @@ const QuestionComments = ({ postId }) => {
               placeholder="Add a comment..."
               value={commentText}
               onChangeText={setCommentText}
+              multiline
+              scrollEnabled
             />
             <TouchableOpacity onPress={handlePostComment}>
               <Ionicons name="send" size={20} color="black" />
@@ -178,8 +193,6 @@ const QuestionComments = ({ postId }) => {
   );
 };
 
-export default QuestionComments;
-
 const styles = StyleSheet.create({
   commentInputContainer: {
     flexDirection: "row",
@@ -219,14 +232,14 @@ const styles = StyleSheet.create({
   },
   commentText: {
     marginTop: 5,
-    fontSize: 16,
+    fontSize: 16, // add gray background to comment content
   },
   likeSection: {
-    flexDirection: "row",
+    flexDirection: "row", // make the likes display inline
     alignItems: "center",
   },
   likesCount: {
-    marginLeft: 5,
+    marginLeft: 5, // add a little space between the heart icon and the count
   },
   commentContent: {
     backgroundColor: "#ddd",
@@ -234,3 +247,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
+
+export default Comments;

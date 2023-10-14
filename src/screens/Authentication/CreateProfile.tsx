@@ -1,24 +1,16 @@
 import * as ImagePicker from "expo-image-picker";
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { doc, updateDoc, setDoc, collection } from "firebase/firestore";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import React, { useState } from "react";
 import {
-  StyleSheet,
   Text,
-  View,
   TextInput,
   TouchableOpacity,
   Image,
   Platform,
   Alert,
-  Button,
   KeyboardAvoidingView,
-  Pressable,
 } from "react-native";
 
 import { database } from "../../config/firebase";
@@ -137,7 +129,7 @@ export default function CreateProfile({ route, navigation }) {
         const userCredential = await createUserWithEmailAndPassword(
           auth,
           email,
-          password,
+          password
         );
         const user = userCredential.user;
         const userDocRef = doc(database, "user", user.uid);
@@ -160,7 +152,7 @@ export default function CreateProfile({ route, navigation }) {
       // Optionally, you can show an alert to the user
       Alert.alert(
         "Error",
-        "An error occurred while creating your profile. Please try again.",
+        "An error occurred while creating your profile. Please try again."
       );
     }
   };

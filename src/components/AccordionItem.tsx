@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { PropsWithChildren } from "react";
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 type AccordionItemPros = PropsWithChildren<{
